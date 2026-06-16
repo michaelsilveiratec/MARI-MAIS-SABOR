@@ -1,0 +1,84 @@
+{
+  "restaurant": {
+    "name": "Mari Mais Sabor",
+    "whatsapp": "5511952458505",
+    "deliveryFee": 5,
+    "pixKey": "pix@marimaissabor.com.br"
+  },
+  "nextOrder": 1,
+  "products": [
+    {
+      "id": "p-segunda",
+      "name": "Segunda - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de segunda-feira.",
+      "price": 25,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "segunda",
+      "dailyStock": 40
+    },
+    {
+      "id": "p-terca",
+      "name": "Terca - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de terca-feira.",
+      "price": 25,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "terca",
+      "dailyStock": 40
+    },
+    {
+      "id": "p-quarta",
+      "name": "Quarta - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de quarta-feira.",
+      "price": 25,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "quarta",
+      "dailyStock": 40
+    },
+    {
+      "id": "p-quinta",
+      "name": "Quinta - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de quinta-feira.",
+      "price": 25,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "quinta",
+      "dailyStock": 40
+    },
+    {
+      "id": "p-sexta",
+      "name": "Sexta - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de sexta-feira.",
+      "price": 25,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "sexta",
+      "dailyStock": 40
+    },
+    {
+      "id": "p-sabado",
+      "name": "Sabado - Cardapio do chefe",
+      "category": "Cardapio do dia",
+      "description": "Edite este cardapio com os itens de sabado.",
+      "price": 30,
+      "image": "",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "sabado",
+      "dailyStock": 40
+    }
+  ],
+  "orders": []
+}

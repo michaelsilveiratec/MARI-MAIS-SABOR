@@ -1,0 +1,9 @@
+node_modules/
+npm-debug.log*
+.env
+
+public/uploads/*
+!public/uploads/README.txt
+
+.DS_Store
+Thumbs.db

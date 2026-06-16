@@ -1,0 +1,10 @@
+{
+  "name": "mari-mais-sabor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema web inicial para o restaurante Mari Mais Sabor.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
