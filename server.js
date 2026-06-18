@@ -1,13 +1,15 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { spawn } = require("child_process");
 
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, "public");
 const UPLOADS_DIR = path.join(PUBLIC_DIR, "uploads");
 const DATA_FILE = path.join(ROOT, "data", "db.json");
-const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".gif"]);
+const PRINT_SCRIPT = path.join(ROOT, "print-large.ps1");
+const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".jfif", ".png", ".webp", ".gif", ".avif", ".bmp"]);
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -17,6 +19,11 @@ const MIME = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
+  ".jfif": "image/jpeg",
+  ".webp": "image/webp",
+  ".gif": "image/gif",
+  ".avif": "image/avif",
+  ".bmp": "image/bmp",
   ".svg": "image/svg+xml; charset=utf-8"
 };
 
@@ -51,6 +58,129 @@ function listUploads() {
 
 function writeDb(db) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2));
+}
+
+function money(value) {
+  return Number(value || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function dateTime(value) {
+  return new Date(value).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+}
+
+function formatAddress(order) {
+  if (order.fulfillment?.type === "Retirada") return "Retirada no restaurante";
+  return `${order.fulfillment?.address || ""}, ${order.fulfillment?.number || ""} - ${order.fulfillment?.neighborhood || ""} ${order.fulfillment?.complement || ""}`.trim();
+}
+
+function formatPayment(order) {
+  if (order.payment?.method === "Dinheiro na entrega") {
+    return `Dinheiro na entrega${order.payment.changeFor ? ` - troco para ${order.payment.changeFor}` : " - levar troco"}`;
+  }
+  if (order.payment?.method === "Cartao na entrega" || order.payment?.method === "Cartão na entrega") {
+    return "Cartão na entrega - levar maquininha";
+  }
+  return order.payment?.pixProof ? `Pix - comprovante: ${order.payment.pixProof}` : "Pix";
+}
+
+function receiptHeader(restaurant = {}) {
+  return `${(restaurant.name || "Mari Mais Sabor").toUpperCase()}
+Endereço: ${restaurant.address || "Rua Haiti 56 Rochdale-Osasco"}
+Contato: ${restaurant.contact || "11952458505"}
+CEP: ${restaurant.cep || "06220056"}
+CNPJ: ${restaurant.cnpj || "46.749.934/0001-21"}`;
+}
+
+function driverReceiptText(order, restaurant = {}) {
+  return `PEDIDO #${order.id}
+${receiptHeader(restaurant)}
+
+Cliente: ${order.customer?.name || ""}
+Telefone: ${order.customer?.phone || ""}
+Horário: ${dateTime(order.createdAt)}
+
+Itens:
+${(order.items || []).map(item => `${item.quantity}x ${item.name}`).join("\n")}
+
+Observação:
+${order.note || "Sem observação"}
+
+Endereço:
+${formatAddress(order)}
+
+Pagamento:
+${formatPayment(order)}
+
+Total:
+${money(order.totals?.total)}
+`;
+}
+
+function kitchenReceiptText(order, restaurant = {}) {
+  return `${receiptHeader(restaurant)}
+
+COMANDA COZINHA
+
+Pedido: #${order.id}
+Horário: ${dateTime(order.createdAt)}
+Tipo: ${order.fulfillment?.type || "Entrega"}
+
+Itens:
+${(order.items || []).map(item => `${item.quantity}x ${item.name}`).join("\n")}
+
+Observação:
+${order.note || "Sem observação"}
+
+Cliente:
+${order.customer?.name || ""}
+Telefone:
+${order.customer?.phone || ""}
+Endereço:
+${formatAddress(order)}
+`;
+}
+
+function receiptText(order, restaurant = {}, type = "driver") {
+  if (type === "kitchen") return kitchenReceiptText(order, restaurant);
+  if (type === "both") return kitchenReceiptText(order, restaurant);
+  return driverReceiptText(order, restaurant);
+}
+
+function localLogoPath(restaurant = {}) {
+  const logoUrl = String(restaurant.logoUrl || "").trim();
+  if (!logoUrl.startsWith("/uploads/")) return "";
+
+  const filePath = path.join(PUBLIC_DIR, logoUrl.replace(/^\//, ""));
+  return filePath.startsWith(UPLOADS_DIR) && fs.existsSync(filePath) ? filePath : "";
+}
+
+function printReceipt(order, printerName, restaurant = {}, type = "driver") {
+  if (!printerName) throw new Error("Nenhuma impressora configurada no sistema.");
+
+  return new Promise((resolve, reject) => {
+    const powershell = spawn(
+      "powershell.exe",
+      ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", PRINT_SCRIPT],
+      {
+        env: { ...process.env, PRINTER_NAME: printerName, LOGO_PATH: localLogoPath(restaurant) },
+        windowsHide: true
+      }
+    );
+
+    let errorOutput = "";
+    powershell.stderr.on("data", chunk => {
+      errorOutput += chunk.toString();
+    });
+    powershell.on("error", reject);
+    powershell.on("close", code => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+      reject(new Error(errorOutput.trim() || "Não foi possível enviar para a impressora."));
+    });
+    powershell.stdin.end(receiptText(order, restaurant, type));
+  });
 }
 
 function send(res, status, payload, contentType = "application/json; charset=utf-8") {
@@ -94,7 +224,7 @@ function readUpload(req) {
       size += chunk.length;
       if (size > 8_000_000) {
         req.destroy();
-        reject(new Error("Imagem muito grande. Use arquivo de ate 8 MB."));
+        reject(new Error("Imagem muito grande. Use arquivo de até 8 MB."));
         return;
       }
       chunks.push(chunk);
@@ -107,7 +237,7 @@ function readUpload(req) {
 function parseMultipartFile(buffer, contentType) {
   const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/);
   const boundary = boundaryMatch?.[1] || boundaryMatch?.[2];
-  if (!boundary) throw new Error("Upload invalido.");
+  if (!boundary) throw new Error("Upload inválido.");
 
   const delimiter = Buffer.from(`--${boundary}`);
   let cursor = buffer.indexOf(delimiter);
@@ -152,7 +282,7 @@ function parseMultipartFile(buffer, contentType) {
     const originalName = decodeURIComponent(filename).replace(/^"(.*)"$/, "$1");
     const ext = path.extname(originalName).toLowerCase();
     if (!IMAGE_EXTENSIONS.has(ext)) {
-      throw new Error("Formato de imagem nao permitido. Use jpg, png, webp ou gif.");
+      throw new Error("Formato de imagem não permitido. Use jpg, jpeg, jfif, png, webp, gif, avif ou bmp.");
     }
     if (!body.length) throw new Error("Imagem vazia.");
 
@@ -176,27 +306,45 @@ function safeUploadName(originalName, ext) {
   return `${Date.now()}-${base}${ext}`;
 }
 
+function detectImageExtension(content) {
+  if (content.length >= 4 && content[0] === 0x89 && content[1] === 0x50 && content[2] === 0x4e && content[3] === 0x47) return ".png";
+  if (content.length >= 3 && content[0] === 0xff && content[1] === 0xd8 && content[2] === 0xff) return ".jpg";
+  if (content.length >= 2 && content[0] === 0x42 && content[1] === 0x4d) return ".bmp";
+  if (content.length >= 6 && content.subarray(0, 6).toString("ascii") === "GIF87a") return ".gif";
+  if (content.length >= 6 && content.subarray(0, 6).toString("ascii") === "GIF89a") return ".gif";
+  if (content.length >= 12 && content.subarray(0, 4).toString("ascii") === "RIFF" && content.subarray(8, 12).toString("ascii") === "WEBP") return ".webp";
+  if (content.length >= 12 && content.subarray(4, 8).toString("ascii") === "ftyp" && ["avif", "avis"].includes(content.subarray(8, 12).toString("ascii"))) return ".avif";
+  return "";
+}
+
 function parseJsonUpload(body) {
   const fileName = String(body.fileName || "foto").trim();
   const dataUrl = String(body.dataUrl || "");
-  const match = dataUrl.match(/^data:(image\/(?:png|jpeg|jpg|webp|gif));base64,(.+)$/i);
+  const match = dataUrl.match(/^data:([^;,]+)?;base64,(.+)$/i);
   if (!match) throw new Error("Imagem invalida.");
 
   const extByType = {
     "image/png": ".png",
     "image/jpeg": ".jpg",
     "image/jpg": ".jpg",
+    "image/pjpeg": ".jpg",
+    "image/jfif": ".jfif",
     "image/webp": ".webp",
-    "image/gif": ".gif"
+    "image/gif": ".gif",
+    "image/avif": ".avif",
+    "image/bmp": ".bmp",
+    "image/x-ms-bmp": ".bmp"
   };
-  const mime = match[1].toLowerCase();
-  const ext = extByType[mime] || path.extname(fileName).toLowerCase();
-  if (!IMAGE_EXTENSIONS.has(ext)) {
-    throw new Error("Formato de imagem nao permitido. Use jpg, png, webp ou gif.");
-  }
-
+  const mime = String(match[1] || "").toLowerCase();
   const content = Buffer.from(match[2], "base64");
   if (!content.length) throw new Error("Imagem vazia.");
+
+  const detectedExt = detectImageExtension(content);
+  const fileExt = path.extname(fileName).toLowerCase();
+  const ext = detectedExt || extByType[mime] || fileExt;
+  if (!IMAGE_EXTENSIONS.has(ext)) {
+    throw new Error("Formato de imagem não permitido. Use jpg, jpeg, jfif, png, webp, gif, avif ou bmp.");
+  }
 
   return {
     originalName: fileName,
@@ -218,6 +366,26 @@ function normalizeProduct(input, current = {}) {
     dayOfWeek: String(input.dayOfWeek ?? current.dayOfWeek ?? "").trim(),
     dailyStock: Number(input.dailyStock ?? current.dailyStock ?? 0)
   };
+}
+
+function normalizeRestaurant(input, current = {}) {
+  const next = { ...current };
+  [
+    "name",
+    "address",
+    "contact",
+    "cep",
+    "cnpj",
+    "logoUrl",
+    "whatsapp",
+    "pixKey",
+    "pixName",
+    "printerName"
+  ].forEach(key => {
+    if (input[key] !== undefined) next[key] = String(input[key] || "").trim();
+  });
+  if (input.deliveryFee !== undefined) next.deliveryFee = Number(input.deliveryFee || 0);
+  return next;
 }
 
 function normalizeOrder(input) {
@@ -267,6 +435,10 @@ function soldToday(db, productId) {
     .reduce((sum, item) => sum + Number(item.quantity || 0), 0);
 }
 
+function compactHistory(history = []) {
+  return history.filter((entry, index, entries) => index === 0 || entry.status !== entries[index - 1]?.status);
+}
+
 function validateOrderStock(db, order) {
   const requested = order.items.reduce((acc, item) => {
     acc[item.productId] = (acc[item.productId] || 0) + Number(item.quantity || 0);
@@ -276,17 +448,17 @@ function validateOrderStock(db, order) {
   for (const [productId, quantity] of Object.entries(requested)) {
     const product = db.products.find(current => current.id === productId);
     if (!product || !product.active) {
-      throw new Error("Um item do pedido nao esta disponivel.");
+      throw new Error("Um item do pedido não está disponível.");
     }
 
     if (product.dayOfWeek && product.dayOfWeek !== currentWeekday()) {
-      throw new Error(`${product.name} nao esta disponivel no cardapio de hoje.`);
+      throw new Error(`${product.name} não está disponível no cardápio de hoje.`);
     }
 
     if (Number(product.dailyStock || 0) > 0) {
       const remaining = Number(product.dailyStock) - soldToday(db, productId);
       if (quantity > remaining) {
-        throw new Error(`${product.name} esgotado devido ao numero de pedidos do dia.`);
+        throw new Error(`${product.name} esgotado devido ao número de pedidos do dia.`);
       }
     }
   }
@@ -309,7 +481,7 @@ function serveStatic(req, res) {
   fs.readFile(filePath, (error, content) => {
     if (error) {
       fs.readFile(path.join(PUBLIC_DIR, "index.html"), (fallbackError, fallback) => {
-        if (fallbackError) return send(res, 404, "Arquivo nao encontrado.", "text/plain; charset=utf-8");
+        if (fallbackError) return send(res, 404, "Arquivo não encontrado.", "text/plain; charset=utf-8");
         send(res, 200, fallback, MIME[".html"]);
       });
       return;
@@ -330,6 +502,13 @@ async function handleApi(req, res) {
 
     if (req.method === "GET" && url.pathname === "/api/uploads") {
       return send(res, 200, listUploads());
+    }
+
+    if (req.method === "PATCH" && url.pathname === "/api/restaurant") {
+      const body = await readBody(req);
+      db.restaurant = normalizeRestaurant(body, db.restaurant);
+      writeDb(db);
+      return send(res, 200, db.restaurant);
     }
 
     if (req.method === "POST" && url.pathname === "/api/uploads") {
@@ -362,7 +541,7 @@ async function handleApi(req, res) {
 
     if (parts[1] === "products" && parts[2]) {
       const index = db.products.findIndex(product => product.id === parts[2]);
-      if (index === -1) return send(res, 404, { error: "Produto nao encontrado." });
+      if (index === -1) return send(res, 404, { error: "Produto não encontrado." });
 
       if (req.method === "PUT") {
         const body = await readBody(req);
@@ -404,17 +583,45 @@ async function handleApi(req, res) {
       db.nextOrder = Number(db.nextOrder || 1) + 1;
       db.orders.unshift(order);
       writeDb(db);
+      if (db.restaurant.printerName) {
+        try {
+          await printReceipt(order, db.restaurant.printerName, db.restaurant, "kitchen");
+          order.printedAt = new Date().toISOString();
+          order.printError = "";
+        } catch (error) {
+          order.printError = error.message || "Não foi possível imprimir automaticamente.";
+        }
+        writeDb(db);
+      }
       return send(res, 201, order);
     }
 
     if (parts[1] === "orders" && parts[2]) {
       const index = db.orders.findIndex(order => order.id === parts[2]);
-      if (index === -1) return send(res, 404, { error: "Pedido nao encontrado." });
+      if (index === -1) return send(res, 404, { error: "Pedido não encontrado." });
+
+      if (req.method === "POST" && parts[3] === "print") {
+        await printReceipt(db.orders[index], db.restaurant.printerName, db.restaurant, url.searchParams.get("type") || "driver");
+        db.orders[index].printedAt = new Date().toISOString();
+        db.orders[index].printError = "";
+        writeDb(db);
+        return send(res, 200, {
+          ok: true,
+          printerName: db.restaurant.printerName
+        });
+      }
 
       if (req.method === "PATCH") {
         const body = await readBody(req);
+        const previousStatus = db.orders[index].status;
         db.orders[index] = { ...db.orders[index], ...body };
-        if (body.status) {
+        db.orders[index].history = compactHistory(db.orders[index].history || []);
+        if (body.confirmPayment) {
+          db.orders[index].paymentStatus = "pago";
+          db.orders[index].paymentConfirmedAt = db.orders[index].paymentConfirmedAt || new Date().toISOString();
+          delete db.orders[index].confirmPayment;
+        }
+        if (body.status && body.status !== previousStatus) {
           db.orders[index].history = [
             ...(db.orders[index].history || []),
             { status: body.status, at: new Date().toISOString() }
@@ -425,9 +632,9 @@ async function handleApi(req, res) {
       }
     }
 
-    send(res, 404, { error: "Rota nao encontrada." });
+    send(res, 404, { error: "Rota não encontrada." });
   } catch (error) {
-    send(res, 400, { error: error.message || "Erro na requisicao." });
+    send(res, 400, { error: error.message || "Erro na requisição." });
   }
 }
 
