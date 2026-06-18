@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/cardapio",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/cozinha",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pedido/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

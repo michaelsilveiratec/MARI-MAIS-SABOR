@@ -26,6 +26,28 @@ npm start
 
 Se estiver usando a porta `3001`, troque `3000` por `3001`.
 
+## Deploy na Vercel
+
+O projeto está preparado para rodar na Vercel com as mesmas rotas:
+
+- `/cardapio`: cardápio do cliente
+- `/admin`: painel administrativo
+- `/cozinha`: monitor da cozinha
+
+Passos recomendados:
+
+1. Suba o código para o GitHub.
+2. Na Vercel, importe o repositório `MARI-MAIS-SABOR`.
+3. Crie ou conecte um banco Postgres/Neon no projeto.
+4. Configure a variável de ambiente `DATABASE_URL` com a URL do banco.
+5. Faça o deploy.
+
+Quando `DATABASE_URL` existe, o sistema cria automaticamente a tabela `app_state` e salva pedidos, produtos e configurações no banco online. Sem `DATABASE_URL`, a Vercel usa armazenamento temporário e os dados podem sumir quando a Function reiniciar.
+
+O arquivo local `data/db.json` não deve ser enviado para a Vercel porque pode conter pedidos reais de clientes. Para produção online, o sistema usa `data/default-db.json` como base inicial limpa.
+
+Importante: a impressão direta na POS-80 funciona apenas no computador local da cozinha. Na Vercel, o monitor da cozinha mostra os pedidos, mas não imprime diretamente na impressora local.
+
 ## Link para clientes no Wi-Fi
 
 Para abrir no celular do cliente, o celular precisa estar no mesmo Wi-Fi do computador que está rodando o sistema.

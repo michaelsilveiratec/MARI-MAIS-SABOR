@@ -419,6 +419,7 @@ function cartPanel() {
 }
 
 function checkoutForm() {
+  const pixConfigured = Boolean(String(state.restaurant.pixKey || "").trim());
   return `
     <form id="checkout" class="stack">
       <h3>Finalizar pedido</h3>
@@ -429,7 +430,7 @@ function checkoutForm() {
         <div class="field">
           <label>Pagamento</label>
           <select name="payment">
-            <option>Pix</option>
+            ${pixConfigured ? "<option>Pix</option>" : ""}
             <option>Dinheiro na entrega</option>
             <option value="Cartao na entrega">Cartão na entrega</option>
           </select>
@@ -441,11 +442,11 @@ function checkoutForm() {
         <div class="field"><label>Bairro</label><input name="neighborhood"></div>
       </div>
       <div class="field"><label>Complemento</label><input name="complement"></div>
-      <div class="field" data-pix-field>
+      <div class="field" data-pix-field ${pixConfigured ? "" : "hidden"}>
         <label>Pix</label>
         <p class="hint">Após confirmar o pedido, o QR Code e a chave Pix aparecem na tela.</p>
       </div>
-      <div class="field" data-cash-field hidden>
+      <div class="field" data-cash-field ${pixConfigured ? "hidden" : ""}>
         <label>Troco para quanto</label>
         <input name="changeFor" placeholder="Ex.: R$ 50,00">
         <p class="hint">O motoboy leva o troco informado para o cliente.</p>

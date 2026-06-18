@@ -1,0 +1,91 @@
+{
+  "restaurant": {
+    "name": "Mari Mais Sabor",
+    "address": "Rua Haiti 56 Rochdale-Osasco",
+    "contact": "11952458505",
+    "cep": "06220056",
+    "cnpj": "46.749.934/0001-21",
+    "logoUrl": "/uploads/1781727907081-captura-de-tela-2026-06-17-171603.png",
+    "whatsapp": "11993470407",
+    "deliveryFee": 5,
+    "pixKey": "",
+    "pixName": "Mari Mais Sabor",
+    "printerName": ""
+  },
+  "nextOrder": 1,
+  "products": [
+    {
+      "name": "Fanta Laranja 600 ml",
+      "category": "Bebidas",
+      "description": "",
+      "price": 7.5,
+      "image": "/uploads/1781806992017-fanta-600ml.png",
+      "active": true,
+      "dishOfDay": false,
+      "dayOfWeek": "",
+      "dailyStock": 25,
+      "id": "p1781806992023"
+    },
+    {
+      "name": "Coca-Cola 600 ml",
+      "category": "Bebidas",
+      "description": "",
+      "price": 6.5,
+      "image": "/uploads/1781807039071-coca-cola-original.webp",
+      "active": true,
+      "dishOfDay": false,
+      "dayOfWeek": "",
+      "dailyStock": 30,
+      "id": "p1781806952967"
+    },
+    {
+      "name": "Churrasco Misto",
+      "category": "Cardapio do dia",
+      "description": "Churrasco Misto",
+      "price": 28,
+      "image": "/uploads/1781806699286-churrasco-misto.avif",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806699291"
+    },
+    {
+      "name": "Fígado Acebolado",
+      "category": "Marmitas",
+      "description": "Fígado Acebolado",
+      "price": 25,
+      "image": "/uploads/1781806565392-figado-acebolado.avif",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806565398"
+    },
+    {
+      "name": "Baião de Dois",
+      "category": "Marmitas",
+      "description": "Acompanhamento: Carne com batata ou Costelinha de Porco",
+      "price": 34,
+      "image": "/uploads/1781806457499-comidas-tipicas-do-nordeste-baiao-de-dois.jpg",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806457508"
+    },
+    {
+      "name": "Filé de Frango",
+      "category": "Cardapio do dia",
+      "description": "Arroz, Feijão e Filé de Frango",
+      "price": 25,
+      "image": "/uploads/1781799691618-file-de-frango.avif",
+      "active": true,
+      "dishOfDay": true,
+      "dayOfWeek": "",
+      "dailyStock": 40,
+      "id": "p1781799691633"
+    }
+  ],
+  "orders": []
+}
