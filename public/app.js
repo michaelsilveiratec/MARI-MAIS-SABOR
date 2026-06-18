@@ -273,17 +273,21 @@ function route() {
   if (tab && ["pedidos", "cardapios", "cardapio", "marca", "relatorios"].includes(tab)) {
     state.adminTab = tab;
   }
-  if (path.startsWith("/admin")) {
+  if (matchesRoute(path, ["/admin", "/adm"])) {
     clearStatusRefresh();
     return renderAdmin();
   }
-  if (path.startsWith("/cozinha")) {
+  if (matchesRoute(path, ["/cozinha", "/monitor"])) {
     clearStatusRefresh();
     return renderKitchen();
   }
   if (path.startsWith("/pedido/")) return renderStatus(path.split("/").filter(Boolean)[1]);
   clearStatusRefresh();
   return renderMenu();
+}
+
+function matchesRoute(path, routes) {
+  return routes.some(routePath => path === routePath || path.startsWith(`${routePath}/`));
 }
 
 function shell(content, active = "cardapio") {
