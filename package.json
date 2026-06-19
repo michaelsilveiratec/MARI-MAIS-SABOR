@@ -5,7 +5,8 @@
   "description": "Sistema web inicial para o restaurante Mari Mais Sabor.",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test:stock": "node scripts/test-stock.js"
   },
   "dependencies": {
     "pg": "^8.21.0"

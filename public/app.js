@@ -218,6 +218,11 @@ function todayWeekdayKey() {
 }
 
 function soldToday(productId) {
+  const product = state.products.find(current => current.id === productId);
+  if (product && product.soldToday !== undefined) {
+    return Number(product.soldToday || 0);
+  }
+
   const dateKey = todayKey();
   return state.orders
     .filter(order => order.status !== "cancelado" && localDateKey(order.createdAt) === dateKey)
@@ -228,6 +233,9 @@ function soldToday(productId) {
 
 function remainingToday(product) {
   if (!Number(product.dailyStock || 0)) return Infinity;
+  if (product.remainingToday !== undefined && product.remainingToday !== null) {
+    return Math.max(0, Number(product.remainingToday || 0));
+  }
   return Math.max(0, Number(product.dailyStock) - soldToday(product.id));
 }
 
@@ -814,7 +822,7 @@ function productsAdmin() {
               <div class="badge-row">
                 <span class="badge">${product.active ? "Ativo" : "Inativo"}${product.dishOfDay ? " - Prato do dia" : ""}</span>
                 ${product.dayOfWeek ? `<span class="badge">${dayLabels[product.dayOfWeek] || product.dayOfWeek}</span>` : ""}
-                ${Number(product.dailyStock || 0) > 0 ? `<span class="badge">Limite ${product.dailyStock} - vendido hoje ${soldToday(product.id)}</span>` : ""}
+                ${Number(product.dailyStock || 0) > 0 ? `<span class="badge">Restam ${remainingToday(product)} de ${product.dailyStock} - vendido hoje ${soldToday(product.id)}</span>` : ""}
               </div>
               <div class="product-heading"><h3>${product.name}</h3><strong class="price">${money(product.price)}</strong></div>
               <p class="muted">${categoryLabel(product.category)}</p>

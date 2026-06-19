@@ -525,6 +525,22 @@ function soldToday(db, productId) {
     .reduce((sum, item) => sum + Number(item.quantity || 0), 0);
 }
 
+function productWithAvailability(db, product) {
+  const dailyStock = Number(product.dailyStock || 0);
+  const sold = soldToday(db, product.id);
+  const remaining = dailyStock > 0 ? Math.max(0, dailyStock - sold) : null;
+  return {
+    ...product,
+    soldToday: sold,
+    remainingToday: remaining,
+    soldOut: dailyStock > 0 && remaining <= 0
+  };
+}
+
+function productsWithAvailability(db) {
+  return db.products.map(product => productWithAvailability(db, product));
+}
+
 function compactHistory(history = []) {
   return history.filter((entry, index, entries) => index === 0 || entry.status !== entries[index - 1]?.status);
 }
@@ -587,7 +603,7 @@ async function handleApi(req, res) {
 
   try {
     if (req.method === "GET" && url.pathname === "/api/state") {
-      return send(res, 200, { ...db, uploads: listUploads() });
+      return send(res, 200, { ...db, products: productsWithAvailability(db), uploads: listUploads() });
     }
 
     if (req.method === "GET" && url.pathname === "/api/uploads") {
@@ -625,7 +641,7 @@ async function handleApi(req, res) {
     }
 
     if (req.method === "GET" && url.pathname === "/api/products") {
-      return send(res, 200, db.products);
+      return send(res, 200, productsWithAvailability(db));
     }
 
     if (req.method === "POST" && url.pathname === "/api/products") {
