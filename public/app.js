@@ -63,6 +63,7 @@ let state = {
   products: [],
   orders: [],
   uploads: [],
+  storage: { persistent: true },
   cart: loadCart(),
   adminTab: "pedidos",
   orderTab: "novo",
@@ -273,6 +274,7 @@ async function refresh() {
   state.products = data.products;
   state.orders = data.orders;
   state.uploads = data.uploads || [];
+  state.storage = data.storage || { persistent: true };
 }
 
 function restaurantLogoUrl() {
@@ -356,6 +358,19 @@ async function autoRefreshCurrentView() {
   }
 }
 
+function canSaveChanges() {
+  return state.storage?.persistent !== false;
+}
+
+function storageNotice() {
+  if (canSaveChanges()) return "";
+  return `
+    <div class="notice error">
+      Banco online não configurado. Pedidos e estoque ficam bloqueados até configurar DATABASE_URL na Vercel.
+    </div>
+  `;
+}
+
 function shell(content, active = "cardapio") {
   const isStaffArea = active === "admin" || active === "cozinha";
   const nav = isStaffArea
@@ -411,6 +426,7 @@ function renderMenu() {
   app.innerHTML = shell(`
     <main class="page">
       ${hero}
+      ${storageNotice()}
       <div class="layout">
         <div>${products}</div>
         ${cartPanel()}
@@ -423,6 +439,7 @@ function renderMenu() {
 function productCard(product) {
   const remaining = remainingToday(product);
   const soldOut = isSoldOut(product);
+  const writesBlocked = !canSaveChanges();
   const image = product.image || "https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=900&q=80";
   return `
     <article class="product-card ${soldOut ? "sold-out" : ""}">
@@ -440,7 +457,7 @@ function productCard(product) {
           <strong class="price">${money(product.price)}</strong>
         </div>
         <p class="muted">${product.description}</p>
-        <button class="btn product-action" data-add="${product.id}" ${soldOut ? "disabled" : ""}>${soldOut ? "Cardápio esgotado" : "Adicionar"}</button>
+        <button class="btn product-action" data-add="${product.id}" ${soldOut || writesBlocked ? "disabled" : ""}>${writesBlocked ? "Sistema em configuração" : soldOut ? "Cardápio esgotado" : "Adicionar"}</button>
       </div>
     </article>
   `;
@@ -526,7 +543,7 @@ function checkoutForm() {
         <p class="hint">O motoboy leva a maquininha de cartão no momento da entrega.</p>
       </div>
       <div class="field"><label>Observação do pedido</label><textarea name="note" placeholder="Ex.: sem cebola"></textarea></div>
-      <button class="btn secondary" ${state.cart.length ? "" : "disabled"}>Confirmar pedido</button>
+      <button class="btn secondary" ${state.cart.length && canSaveChanges() ? "" : "disabled"}>Confirmar pedido</button>
     </form>
   `;
 }
@@ -610,6 +627,7 @@ function renderAdmin() {
           <p class="muted">Produtos, pedidos, impressão e relatórios.</p>
         </div>
       </div>
+      ${storageNotice()}
       ${state.flash ? `<div class="notice ${state.flashType === "error" ? "error" : ""}">${state.flash}</div>` : ""}
       <div class="tabs">
         ${["pedidos", "cardapios", "cardapio", "marca", "relatorios"].map(tab => `<button type="button" class="pill ${state.adminTab === tab ? "active" : ""}" data-admin-tab="${tab}">${tabLabel(tab)}</button>`).join("")}
@@ -1199,6 +1217,7 @@ function renderKitchen() {
         </div>
         <span class="readonly-badge">Somente visualização</span>
       </div>
+      ${storageNotice()}
       <div class="kitchen-summary">
         <div class="stat"><span>Pedidos abertos</span><strong>${orders.length}</strong></div>
         <div class="stat"><span>Novos</span><strong>${newOrders}</strong></div>

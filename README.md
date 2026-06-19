@@ -42,7 +42,7 @@ Passos recomendados:
 4. Configure a variável de ambiente `DATABASE_URL` com a URL do banco.
 5. Faça o deploy.
 
-Quando `DATABASE_URL` existe, o sistema cria automaticamente a tabela `app_state` e salva pedidos, produtos e configurações no banco online. Sem `DATABASE_URL`, a Vercel usa armazenamento temporário e os dados podem sumir quando a Function reiniciar.
+Quando `DATABASE_URL` existe, o sistema cria automaticamente a tabela `app_state` e salva pedidos, produtos e configurações no banco online. Sem `DATABASE_URL`, a Vercel tem apenas armazenamento temporário; por segurança, pedidos e alterações de estoque ficam bloqueados até o banco online ser configurado.
 
 O arquivo local `data/db.json` não deve ser enviado para a Vercel porque pode conter pedidos reais de clientes. Para produção online, o sistema usa `data/default-db.json` como base inicial limpa.
 

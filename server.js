@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { spawn } = require("child_process");
 const { Pool } = require("pg");
@@ -10,10 +11,15 @@ const PUBLIC_DIR = path.join(ROOT, "public");
 const UPLOADS_DIR = path.join(PUBLIC_DIR, "uploads");
 const DATA_FILE = path.join(ROOT, "data", "db.json");
 const SEED_DATA_FILE = path.join(ROOT, "data", "default-db.json");
-const RUNTIME_DATA_FILE = process.env.VERCEL ? path.join("/tmp", "mari-mais-sabor-db.json") : DATA_FILE;
+const RUNTIME_DATA_FILE = process.env.RUNTIME_DATA_FILE
+  || (process.env.VERCEL ? path.join(os.tmpdir(), "mari-mais-sabor-db.json") : DATA_FILE);
 const PRINT_SCRIPT = path.join(ROOT, "print-large.ps1");
 const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".jfif", ".png", ".webp", ".gif", ".avif", ".bmp"]);
-const DATABASE_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL || "";
+const DATABASE_URL = process.env.DATABASE_URL
+  || process.env.POSTGRES_URL
+  || process.env.POSTGRES_PRISMA_URL
+  || process.env.POSTGRES_URL_NON_POOLING
+  || "";
 
 let pool = null;
 let databaseReady = false;
@@ -61,6 +67,28 @@ function runtimeDataFile() {
 
 function shouldUseSqlDatabase() {
   return Boolean(DATABASE_URL);
+}
+
+function storageInfo() {
+  if (shouldUseSqlDatabase()) {
+    return { mode: "postgres", persistent: true };
+  }
+  if (process.env.VERCEL) {
+    return {
+      mode: "temporary",
+      persistent: false,
+      message: "Banco online nao configurado. Configure DATABASE_URL na Vercel para salvar pedidos e estoque."
+    };
+  }
+  return { mode: "local-json", persistent: true };
+}
+
+function canPersistWrites() {
+  return storageInfo().persistent;
+}
+
+function isWriteMethod(method) {
+  return !["GET", "HEAD", "OPTIONS"].includes(method);
 }
 
 function getPool() {
@@ -618,8 +646,19 @@ async function handleApi(req, res) {
   const db = await readDb();
 
   try {
+    if (isWriteMethod(req.method) && !canPersistWrites()) {
+      return send(res, 503, {
+        error: "Banco online não configurado. Configure DATABASE_URL na Vercel antes de receber pedidos ou alterar estoque."
+      });
+    }
+
     if (req.method === "GET" && url.pathname === "/api/state") {
-      return send(res, 200, { ...db, products: productsWithAvailability(db), uploads: listUploads() });
+      return send(res, 200, {
+        ...db,
+        products: productsWithAvailability(db),
+        uploads: listUploads(),
+        storage: storageInfo()
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/uploads") {
