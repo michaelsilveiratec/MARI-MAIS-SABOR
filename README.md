@@ -83,6 +83,20 @@ Regras atuais:
 - Clique em `Saiu para entrega`: apenas atualiza o status do pedido.
 - Se a impressão direta falhar, o sistema abre a janela de impressão do navegador como reserva.
 
+### Agente local para pedidos da Vercel
+
+A Vercel não acessa diretamente uma impressora USB. No computador Windows da cozinha:
+
+1. Copie `.env.print-agent.example` para `.env.print-agent`.
+2. Preencha `DATABASE_URL` com a mesma conexão do Neon usada na Vercel.
+3. Deixe `PRINTER_NAME=AUTO`; o nome preferido e o modo podem ser definidos no painel Admin, na aba `Marca`.
+4. Execute `npm run print-agent` ou dê dois cliques em `iniciar-impressora.cmd`.
+5. Mantenha a janela do agente aberta durante o atendimento.
+
+Para iniciar o agente automaticamente junto com o Windows, execute uma vez `instalar-inicializacao-impressora.ps1`. Depois disso, o agente fica aguardando: ao conectar a POS-80 ao USB, ele a reconhece e passa a imprimir os pedidos pendentes.
+
+Na primeira inicialização, pedidos antigos não são impressos. A partir desse momento, o agente consulta o Neon, imprime cada pedido novo e registra `printedAt` para evitar duplicações.
+
 ## Monitor da cozinha
 
 O link `/cozinha` foi pensado para ficar aberto em um monitor. Ele não tem botões de alteração, não confirma pagamento e não muda status; apenas mostra os pedidos abertos e atualiza automaticamente.

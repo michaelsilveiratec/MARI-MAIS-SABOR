@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "print-agent": "node scripts/print-agent.js",
+    "print-agent:detect": "node scripts/print-agent.js --detect-printer",
     "test:stock": "node scripts/test-stock.js"
   },
   "dependencies": {

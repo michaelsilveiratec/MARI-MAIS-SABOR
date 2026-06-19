@@ -905,6 +905,18 @@ async function uploadProductImage(file) {
 
 function brandAdmin() {
   const logo = restaurantLogoUrl();
+  const printerMode = state.restaurant.printerMode || "auto";
+  const printerAgent = state.restaurant.printerAgent || {};
+  const printerLastSeen = Date.parse(printerAgent.lastSeenAt || "");
+  const printerAgentOnline = Number.isFinite(printerLastSeen) && Date.now() - printerLastSeen < 45000;
+  const printerStatus = printerMode === "disabled"
+    ? "Impressão automática desativada"
+    : printerAgentOnline && printerAgent.detectedPrinter
+      ? `Conectada: ${printerAgent.detectedPrinter}${printerAgent.portName ? ` (${printerAgent.portName})` : ""}`
+      : printerAgentOnline
+        ? "Agente ativo — aguardando a impressora USB"
+        : "Agente local desligado ou sem conexão";
+  const printerStatusClass = printerMode === "disabled" || printerAgentOnline && printerAgent.detectedPrinter ? "" : "error";
   return `
     <section class="form-panel brand-admin stack">
       <div class="section-title" style="margin:0">
@@ -938,8 +950,34 @@ function brandAdmin() {
               <input name="pixKey" value="${state.restaurant.pixKey || ""}" placeholder="CPF, telefone, e-mail ou chave aleatória">
             </div>
           </div>
+          <section class="form-panel stack">
+            <div class="section-title" style="margin:0">
+              <div>
+                <h3>Impressora da cozinha</h3>
+                <p class="muted">O agente do computador detecta a impressora sempre que ela for conectada ao USB.</p>
+              </div>
+              <button type="button" class="btn secondary" data-refresh="1">Atualizar status</button>
+            </div>
+            <div class="notice ${printerStatusClass}">${printerStatus}</div>
+            <div class="two">
+              <div class="field">
+                <label>Modo de impressão</label>
+                <select name="printerMode">
+                  <option value="auto" ${printerMode === "auto" ? "selected" : ""}>Detectar automaticamente (recomendado)</option>
+                  <option value="manual" ${printerMode === "manual" ? "selected" : ""}>Escolher pelo nome</option>
+                  <option value="disabled" ${printerMode === "disabled" ? "selected" : ""}>Desativada</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Nome preferido no Windows</label>
+                <input name="printerName" value="${state.restaurant.printerName || ""}" placeholder="POS-80">
+                <p class="hint">No modo automático esse nome é apenas a preferência; a porta USB também é detectada.</p>
+              </div>
+            </div>
+            ${printerAgent.lastSeenAt ? `<p class="hint">Último contato do agente: ${dateTime(printerAgent.lastSeenAt)}</p>` : ""}
+          </section>
           <div class="actions">
-            <button type="button" class="btn secondary" data-save-brand="1">Salvar marca e Pix</button>
+            <button type="button" class="btn secondary" data-save-brand="1">Salvar marca, Pix e impressora</button>
           </div>
         </form>
       </div>
@@ -969,18 +1007,20 @@ async function saveBrandForm(form, button = null) {
       body: JSON.stringify({
         logoUrl,
         pixName: data.pixName,
-        pixKey: data.pixKey
+        pixKey: data.pixKey,
+        printerMode: data.printerMode,
+        printerName: data.printerName
       })
     });
 
     state.flashType = "success";
-    state.flash = "Marca e Pix atualizados com sucesso.";
+    state.flash = "Marca, Pix e impressora atualizados com sucesso.";
     await refresh();
     state.adminTab = "marca";
     renderAdmin();
   } catch (error) {
     state.flashType = "error";
-    state.flash = `Erro ao salvar marca e Pix: ${error.message}`;
+    state.flash = `Erro ao salvar marca, Pix e impressora: ${error.message}`;
     renderAdmin();
   } finally {
     if (button) {

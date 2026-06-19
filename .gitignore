@@ -1,6 +1,8 @@
 node_modules/
 npm-debug.log*
 .env
+.env.print-agent
+data/print-agent-state.json
 
 public/uploads/*
 !public/uploads/README.txt

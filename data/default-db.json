@@ -10,7 +10,8 @@
     "deliveryFee": 5,
     "pixKey": "",
     "pixName": "Mari Mais Sabor",
-    "printerName": ""
+    "printerName": "",
+    "printerMode": "auto"
   },
   "nextOrder": 1,
   "products": [

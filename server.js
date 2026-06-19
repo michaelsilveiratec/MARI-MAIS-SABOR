@@ -513,7 +513,8 @@ function normalizeRestaurant(input, current = {}) {
     "whatsapp",
     "pixKey",
     "pixName",
-    "printerName"
+    "printerName",
+    "printerMode"
   ].forEach(key => {
     if (input[key] !== undefined) next[key] = String(input[key] || "").trim();
   });
@@ -828,3 +829,4 @@ if (require.main === module) {
 }
 
 module.exports = handleRequest;
+module.exports.printReceipt = printReceipt;

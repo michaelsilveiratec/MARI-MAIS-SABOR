@@ -1,84 +1,2033 @@
 {
   "restaurant": {
     "name": "Mari Mais Sabor",
-    "whatsapp": "5511952458505",
+    "address": "Rua Haiti 56 Rochdale-Osasco",
+    "contact": "11952458505",
+    "cep": "06220056",
+    "cnpj": "46.749.934/0001-21",
+    "logoUrl": "/uploads/1781727907081-captura-de-tela-2026-06-17-171603.png",
+    "whatsapp": "11993470407",
     "deliveryFee": 5,
-    "pixKey": "pix@marimaissabor.com.br"
+    "pixKey": "34731163862",
+    "pixName": "Michael Lucas Ramos",
+    "printerName": "POS-80"
   },
-  "nextOrder": 1,
+  "nextOrder": 33,
   "products": [
     {
-      "id": "p-segunda",
-      "name": "Segunda - Cardapio do chefe",
-      "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de segunda-feira.",
-      "price": 25,
-      "image": "",
+      "name": "Fanta Laranja 600 ml",
+      "category": "Bebidas",
+      "description": "",
+      "price": 7.5,
+      "image": "/uploads/1781806992017-fanta-600ml.png",
       "active": true,
-      "dishOfDay": true,
-      "dayOfWeek": "segunda",
-      "dailyStock": 40
+      "dishOfDay": false,
+      "dayOfWeek": "",
+      "dailyStock": 25,
+      "id": "p1781806992023"
     },
     {
-      "id": "p-terca",
-      "name": "Terca - Cardapio do chefe",
-      "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de terca-feira.",
-      "price": 25,
-      "image": "",
+      "name": "Coca-Cola 600 ml",
+      "category": "Bebidas",
+      "description": "",
+      "price": 6.5,
+      "image": "/uploads/1781807039071-coca-cola-original.webp",
       "active": true,
-      "dishOfDay": true,
-      "dayOfWeek": "terca",
-      "dailyStock": 40
+      "dishOfDay": false,
+      "dayOfWeek": "",
+      "dailyStock": 30,
+      "id": "p1781806952967"
     },
     {
-      "id": "p-quarta",
-      "name": "Quarta - Cardapio do chefe",
+      "name": "Churrasco Misto",
       "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de quarta-feira.",
-      "price": 25,
-      "image": "",
+      "description": "Churrasco Misto",
+      "price": 28,
+      "image": "/uploads/1781806699286-churrasco-misto.avif",
       "active": true,
       "dishOfDay": true,
-      "dayOfWeek": "quarta",
-      "dailyStock": 40
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806699291"
     },
     {
-      "id": "p-quinta",
-      "name": "Quinta - Cardapio do chefe",
-      "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de quinta-feira.",
+      "name": "Fígado Acebolado",
+      "category": "Marmitas",
+      "description": "Fígado Acebolado",
       "price": 25,
-      "image": "",
+      "image": "/uploads/1781806565392-figado-acebolado.avif",
       "active": true,
       "dishOfDay": true,
-      "dayOfWeek": "quinta",
-      "dailyStock": 40
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806565398"
     },
     {
-      "id": "p-sexta",
-      "name": "Sexta - Cardapio do chefe",
-      "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de sexta-feira.",
-      "price": 25,
-      "image": "",
+      "name": "Baião de Dois",
+      "category": "Marmitas",
+      "description": "Acompanhamento: Carne com batata ou Costelinha de Porco",
+      "price": 34,
+      "image": "/uploads/1781806457499-comidas-tipicas-do-nordeste-baiao-de-dois.jpg",
       "active": true,
       "dishOfDay": true,
-      "dayOfWeek": "sexta",
-      "dailyStock": 40
+      "dayOfWeek": "",
+      "dailyStock": 20,
+      "id": "p1781806457508"
     },
     {
-      "id": "p-sabado",
-      "name": "Sabado - Cardapio do chefe",
+      "name": "Filé de Frango",
       "category": "Cardapio do dia",
-      "description": "Edite este cardapio com os itens de sabado.",
-      "price": 30,
-      "image": "",
+      "description": "Arroz, Feijão e Filé de Frango",
+      "price": 25,
+      "image": "/uploads/1781799691618-file-de-frango.avif",
       "active": true,
       "dishOfDay": true,
-      "dayOfWeek": "sabado",
-      "dailyStock": 40
+      "dayOfWeek": "",
+      "dailyStock": 40,
+      "id": "p1781799691633"
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "customer": {
+        "name": "José Raimundo de Jesus Santos",
+        "phone": "11967590973"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rio Claro",
+        "number": "6",
+        "neighborhood": "Rochdale",
+        "complement": "casa 2"
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p1781806699291",
+          "name": "Churrasco Misto",
+          "quantity": 1,
+          "price": 28,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 28,
+        "deliveryFee": 5,
+        "total": 33
+      },
+      "id": "0032",
+      "createdAt": "2026-06-18T18:27:55.720Z",
+      "status": "novo",
+      "paymentStatus": "aguardando pagamento",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-18T18:27:55.720Z"
+        }
+      ],
+      "printedAt": "2026-06-18T18:28:01.162Z",
+      "printError": ""
+    },
+    {
+      "customer": {
+        "name": "Michael Ramos",
+        "phone": "119934704078"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Brasil ",
+        "number": "1538",
+        "neighborhood": "Rochdale",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": "Sim"
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p1781799691633",
+          "name": "Filé de Frango",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0031",
+      "createdAt": "2026-06-18T16:25:28.367Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-18T16:25:28.367Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-18T16:25:58.892Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-18T17:06:42.026Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-18T17:18:28.066Z"
+        }
+      ],
+      "printedAt": "2026-06-18T16:25:29.855Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T17:04:22.491Z"
+    },
+    {
+      "customer": {
+        "name": "MARIA FILHA DE SOUSA SANTOS",
+        "phone": "11999632312"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rua HAITI",
+        "number": "56",
+        "neighborhood": "",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quinta",
+          "name": "Filé de frango",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0030",
+      "createdAt": "2026-06-18T14:38:58.759Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-18T14:38:58.759Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-18T16:07:20.886Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-18T16:08:35.463Z"
+        }
+      ],
+      "printedAt": "2026-06-18T14:39:00.808Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T17:58:53.097Z"
+    },
+    {
+      "customer": {
+        "name": "Michael ",
+        "phone": "(11) 99347-0407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": "Bloco A apto 804"
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "Sem cebolo",
+      "items": [
+        {
+          "productId": "p-quinta",
+          "name": "Filé de frango",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0029",
+      "createdAt": "2026-06-18T14:35:25.903Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-18T14:35:25.903Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-18T16:07:21.881Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-18T16:08:36.835Z"
+        }
+      ],
+      "printedAt": "2026-06-18T16:07:25.007Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T17:58:58.739Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 99347-0407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Cartao na entrega",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "Sem cebola",
+      "items": [
+        {
+          "productId": "p-quinta",
+          "name": "Quinta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0028",
+      "createdAt": "2026-06-18T13:42:04.397Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-18T13:42:04.397Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-18T13:43:10.772Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-18T13:43:35.032Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-18T13:44:54.241Z"
+        }
+      ],
+      "printedAt": "2026-06-18T14:31:54.961Z",
+      "printError": ""
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "11993470404"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 4,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 100,
+        "deliveryFee": 5,
+        "total": 105
+      },
+      "id": "0027",
+      "createdAt": "2026-06-17T22:31:05.444Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:31:05.444Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T22:31:32.317Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:31:48.973Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:34.935Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:32:14.486Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T17:59:00.612Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 94601-7530"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0026",
+      "createdAt": "2026-06-17T22:20:15.750Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:20:15.750Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:28:29.930Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:36.486Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:20:21.249Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:24.149Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 94601-7530"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 2,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 50,
+        "deliveryFee": 5,
+        "total": 55
+      },
+      "id": "0025",
+      "createdAt": "2026-06-17T22:18:20.161Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:18:20.161Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:28:37.979Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:37.481Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:18:31.848Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:19.928Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 99347-0407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 3,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 75,
+        "deliveryFee": 5,
+        "total": 80
+      },
+      "id": "0024",
+      "createdAt": "2026-06-17T22:16:20.166Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:16:20.166Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:28:42.609Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:38.489Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:16:22.700Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:18.439Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "11993470404"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Dinheiro na entrega",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "Sem cebola",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 8,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 200,
+        "deliveryFee": 5,
+        "total": 205
+      },
+      "id": "0023",
+      "createdAt": "2026-06-17T22:14:22.077Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:14:22.077Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:28:47.268Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:39.406Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:14:25.082Z",
+      "printError": ""
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 99347-0407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 3,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 75,
+        "deliveryFee": 5,
+        "total": 80
+      },
+      "id": "0022",
+      "createdAt": "2026-06-17T22:09:04.967Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:09:04.968Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:28:53.129Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:40.421Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:09:08.433Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:13.571Z"
+    },
+    {
+      "customer": {
+        "name": "SAASAASDS",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0021",
+      "createdAt": "2026-06-17T22:02:17.762Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T22:02:17.763Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T22:02:53.261Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:03:09.659Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:03:24.454Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:48.768Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:41.389Z"
+        }
+      ],
+      "printedAt": "2026-06-17T22:02:20.458Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:12.139Z"
+    },
+    {
+      "customer": {
+        "name": "Tereza",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1538",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0020",
+      "createdAt": "2026-06-17T21:58:24.306Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T21:58:24.306Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T21:59:09.989Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:01:30.949Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:03:25.090Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:50.089Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:42.289Z"
+        }
+      ],
+      "printedAt": "2026-06-17T21:58:27.257Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:06.768Z"
+    },
+    {
+      "customer": {
+        "name": "Pastor Michael",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "10",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0019",
+      "createdAt": "2026-06-17T21:36:39.506Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T21:36:39.506Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T21:38:54.980Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:01:32.595Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:03:25.854Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:50.903Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:42.998Z"
+        }
+      ],
+      "printedAt": "2026-06-17T21:36:42.546Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:59.827Z"
+    },
+    {
+      "customer": {
+        "name": "Joaquim Januario",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "7",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 2,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 50,
+        "deliveryFee": 5,
+        "total": 55
+      },
+      "id": "0018",
+      "createdAt": "2026-06-17T20:46:03.499Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T20:46:03.499Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T20:50:24.248Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T20:50:32.074Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T20:53:56.336Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:51.729Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:43.223Z"
+        }
+      ],
+      "printedAt": "2026-06-17T20:46:06.101Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:58.125Z"
+    },
+    {
+      "customer": {
+        "name": "Pastor Michael",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "15",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": "SIM"
+      },
+      "note": "sem cebola",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0017",
+      "createdAt": "2026-06-17T20:42:05.563Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T20:42:05.563Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T20:43:22.319Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T20:43:24.160Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T20:44:20.944Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:52.306Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:43.752Z"
+        }
+      ],
+      "printedAt": "2026-06-17T20:42:08.455Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:01.776Z"
+    },
+    {
+      "customer": {
+        "name": "TESTE",
+        "phone": "11 993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1538",
+        "neighborhood": "ROCHDALE",
+        "complement": "IGREJA DA GRAÇA"
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": "SIM"
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0016",
+      "createdAt": "2026-06-17T20:28:51.630Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T20:28:51.630Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T20:37:55.834Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T20:43:20.084Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T20:44:21.986Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:53.085Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:43.971Z"
+        }
+      ],
+      "printedAt": "2026-06-17T20:28:57.902Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:03:31.652Z"
+    },
+    {
+      "customer": {
+        "name": "MAIONESE",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "15",
+        "neighborhood": "",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0015",
+      "createdAt": "2026-06-17T20:04:32.084Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T20:04:32.084Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T20:05:01.673Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T20:05:33.782Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T20:06:31.650Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:54.042Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:44.480Z"
+        }
+      ],
+      "printedAt": "2026-06-17T20:04:45.415Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:53.675Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 99347-0407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "Cebola",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 23,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 575,
+        "deliveryFee": 5,
+        "total": 580
+      },
+      "id": "0014",
+      "createdAt": "2026-06-17T17:52:26.869Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:52:26.870Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:54:45.530Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:55:24.709Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:56:06.735Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:54.817Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:44.832Z"
+        }
+      ],
+      "printedAt": "2026-06-17T17:52:50.844Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:52.147Z"
+    },
+    {
+      "customer": {
+        "name": "Pastor Michael",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1538",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": "SIM"
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0013",
+      "createdAt": "2026-06-17T17:33:08.298Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:33:08.298Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:33:26.497Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:33:36.095Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:33:52.462Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:55.597Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:45.041Z"
+        }
+      ],
+      "printedAt": "2026-06-17T17:33:14.918Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:37.942Z"
+    },
+    {
+      "customer": {
+        "name": "walter",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1538",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Dinheiro na entrega",
+        "changeFor": "20,00",
+        "pixProof": ""
+      },
+      "note": "sem cebola",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0012",
+      "createdAt": "2026-06-17T17:28:34.843Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:28:34.844Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:29:01.765Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:29:30.328Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:30:08.865Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:55.818Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:45.342Z"
+        }
+      ],
+      "printedAt": "2026-06-17T17:28:37.933Z",
+      "printError": ""
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 94601-7530"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0011",
+      "createdAt": "2026-06-17T17:21:51.208Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:21:51.208Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:22:50.623Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:23:23.324Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:24:15.988Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:56.227Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:45.623Z"
+        }
+      ],
+      "printedAt": "2026-06-17T17:22:06.190Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:41.433Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 94601-7530"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0010",
+      "createdAt": "2026-06-17T17:16:08.697Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:16:08.697Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:16:29.231Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:17:29.490Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:18:18.707Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:56.563Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:45.904Z"
+        }
+      ],
+      "printedAt": "2026-06-17T17:16:17.135Z",
+      "printError": "",
+      "paymentConfirmedAt": "2026-06-18T18:02:42.901Z"
+    },
+    {
+      "customer": {
+        "name": "SAL",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "são paulo",
+        "number": "10",
+        "neighborhood": "terra",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 4,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 100,
+        "deliveryFee": 5,
+        "total": 105
+      },
+      "id": "0009",
+      "createdAt": "2026-06-17T17:01:50.261Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T17:01:50.261Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:03:40.051Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:03:48.356Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:04:32.403Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:56.785Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:46.139Z"
+        }
+      ],
+      "paymentConfirmedAt": "2026-06-18T18:02:44.499Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "11993470404"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 2,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 50,
+        "deliveryFee": 5,
+        "total": 55
+      },
+      "id": "0008",
+      "createdAt": "2026-06-17T16:57:03.472Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T16:57:03.473Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T17:04:01.149Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:04:03.290Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:04:33.138Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:57.224Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:46.360Z"
+        }
+      ],
+      "paymentConfirmedAt": "2026-06-18T17:59:18.507Z"
+    },
+    {
+      "customer": {
+        "name": "CHIRLLES MALHEIROS RAMOS",
+        "phone": "(11) 94601-7530"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "Rondônia",
+        "number": "267",
+        "neighborhood": "Aldeinha",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0007",
+      "createdAt": "2026-06-17T16:54:17.930Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T16:54:17.931Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T17:04:17.667Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T17:04:34.336Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:57.442Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:49.059Z"
+        }
+      ],
+      "paymentConfirmedAt": "2026-06-18T17:59:16.474Z"
+    },
+    {
+      "customer": {
+        "name": "paulo",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "templo",
+        "number": "23",
+        "neighborhood": "casa",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Dinheiro na entrega",
+        "changeFor": "10",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 2,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 50,
+        "deliveryFee": 5,
+        "total": 55
+      },
+      "id": "0006",
+      "createdAt": "2026-06-17T16:50:20.518Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T16:50:20.520Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T16:51:16.401Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T16:52:09.175Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:57.879Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:49.865Z"
+        }
+      ]
+    },
+    {
+      "customer": {
+        "name": "SANDRA",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "são paulo",
+        "number": "15",
+        "neighborhood": "novo",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0005",
+      "createdAt": "2026-06-17T16:49:00.463Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T16:49:00.464Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T16:51:19.922Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T16:52:10.759Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:58.170Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:50.061Z"
+        }
+      ],
+      "paymentConfirmedAt": "2026-06-18T17:59:12.076Z"
+    },
+    {
+      "customer": {
+        "name": "michael",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "1523",
+        "neighborhood": "ROCHDALE",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Cartao na entrega",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "sem cebola",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0004",
+      "createdAt": "2026-06-17T16:47:15.735Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T16:47:15.735Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T16:48:27.867Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T16:51:50.892Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:58.421Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:50.292Z"
+        }
+      ]
+    },
+    {
+      "customer": {
+        "name": "CLIENTE TESTE IMPRESSORA",
+        "phone": "11988887777"
+      },
+      "fulfillment": {
+        "complement": "Casa",
+        "type": "Entrega",
+        "address": "Rua Teste",
+        "neighborhood": "Centro",
+        "number": "123"
+      },
+      "payment": {
+        "changeFor": "50",
+        "pixProof": "",
+        "method": "Dinheiro na entrega"
+      },
+      "note": "Simulação automática de pedido e impressão",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 5,
+        "total": 30
+      },
+      "id": "0003",
+      "createdAt": "2026-06-17T15:01:18.850Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T15:01:18.850Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T16:36:15.106Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T16:36:51.678Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:58.648Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:50.508Z"
+        }
+      ]
+    },
+    {
+      "customer": {
+        "name": "TESTE IMPRESSORA",
+        "phone": "11999999999"
+      },
+      "fulfillment": {
+        "address": "",
+        "complement": "",
+        "number": "",
+        "neighborhood": "",
+        "type": "Retirada"
+      },
+      "payment": {
+        "changeFor": "50",
+        "method": "Dinheiro na entrega",
+        "pixProof": ""
+      },
+      "note": "Pedido automático de teste da impressora",
+      "items": [
+        {
+          "productId": "p-quarta",
+          "name": "Quarta - Cardápio do chefe",
+          "quantity": 1,
+          "price": 25,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 25,
+        "deliveryFee": 0,
+        "total": 25
+      },
+      "id": "0002",
+      "createdAt": "2026-06-17T14:56:03.913Z",
+      "status": "entregue",
+      "paymentStatus": "pagar na entrega",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T14:56:03.913Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T16:36:16.937Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T16:36:54.194Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:58.838Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:51.039Z"
+        }
+      ]
+    },
+    {
+      "customer": {
+        "name": "Rene",
+        "phone": "11993470407"
+      },
+      "fulfillment": {
+        "type": "Entrega",
+        "address": "AVENIDA BRASIL",
+        "number": "15",
+        "neighborhood": "",
+        "complement": ""
+      },
+      "payment": {
+        "method": "Pix",
+        "changeFor": "",
+        "pixProof": ""
+      },
+      "note": "sem cebola",
+      "items": [
+        {
+          "productId": "p1781704995295",
+          "name": "Frango Grelhado",
+          "quantity": 1,
+          "price": 35,
+          "note": ""
+        }
+      ],
+      "totals": {
+        "subtotal": 35,
+        "deliveryFee": 5,
+        "total": 40
+      },
+      "id": "0001",
+      "createdAt": "2026-06-17T14:07:30.719Z",
+      "status": "entregue",
+      "paymentStatus": "pago",
+      "history": [
+        {
+          "status": "novo",
+          "at": "2026-06-17T14:07:30.719Z"
+        },
+        {
+          "status": "em_preparo",
+          "at": "2026-06-17T14:08:37.185Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T14:08:59.985Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T14:10:18.877Z"
+        },
+        {
+          "status": "saiu_para_entrega",
+          "at": "2026-06-17T22:24:59.041Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-17T22:32:51.850Z"
+        },
+        {
+          "status": "cancelado",
+          "at": "2026-06-18T16:08:47.268Z"
+        },
+        {
+          "status": "entregue",
+          "at": "2026-06-18T16:08:59.395Z"
+        }
+      ],
+      "paymentConfirmedAt": "2026-06-18T17:59:07.003Z"
+    }
+  ]
 }
