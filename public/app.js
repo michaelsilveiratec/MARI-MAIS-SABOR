@@ -231,8 +231,17 @@ function soldToday(productId) {
     .reduce((sum, item) => sum + Number(item.quantity || 0), 0);
 }
 
+function hasDailyStockLimit(product) {
+  return product.dailyStock !== undefined && product.dailyStock !== null && String(product.dailyStock).trim() !== "";
+}
+
+function parseDailyStock(value) {
+  const text = String(value ?? "").trim();
+  return text === "" ? null : Math.max(0, Math.floor(Number(text) || 0));
+}
+
 function remainingToday(product) {
-  if (!Number(product.dailyStock || 0)) return Infinity;
+  if (!hasDailyStockLimit(product)) return Infinity;
   if (product.remainingToday !== undefined && product.remainingToday !== null) {
     return Math.max(0, Number(product.remainingToday || 0));
   }
@@ -244,7 +253,7 @@ function isProductForToday(product) {
 }
 
 function isSoldOut(product) {
-  return Number(product.dailyStock || 0) > 0 && remainingToday(product) <= 0;
+  return hasDailyStockLimit(product) && remainingToday(product) <= 0;
 }
 
 function api(path, options = {}) {
@@ -424,7 +433,7 @@ function productCard(product) {
         <div class="badge-row">
           ${product.dishOfDay ? '<span class="badge">Prato do dia</span>' : ""}
           ${product.dayOfWeek ? `<span class="badge">Cardápio de ${dayLabels[product.dayOfWeek] || product.dayOfWeek}</span>` : ""}
-          ${Number(product.dailyStock || 0) > 0 ? `<span class="badge ${soldOut ? "danger" : ""}">${soldOut ? "Esgotado" : `Restam ${remaining}`}</span>` : ""}
+          ${hasDailyStockLimit(product) ? `<span class="badge ${soldOut ? "danger" : ""}">${soldOut ? "Esgotado" : `Restam ${remaining}`}</span>` : ""}
         </div>
         <div class="product-heading">
           <h3>${product.name}</h3>
@@ -727,7 +736,7 @@ function dailyMenuQuickForm() {
         <div class="field">
           <label>Quantidade disponível</label>
           <input name="dailyStock" type="number" min="0" step="1" placeholder="Ex.: 40">
-          <p class="hint">Use 0 ou deixe vazio para não limitar.</p>
+          <p class="hint">Deixe vazio para não limitar. Use 0 para esgotar.</p>
         </div>
       </div>
       <div class="field"><label>Descrição</label><textarea name="description" placeholder="Ex.: arroz, feijão, salada e frango"></textarea></div>
@@ -741,9 +750,9 @@ function dailyMenuQuickForm() {
 
 function dailyMenuCard(product) {
   const sold = soldToday(product.id);
-  const stock = Number(product.dailyStock || 0);
+  const stock = hasDailyStockLimit(product) ? Number(product.dailyStock) : null;
   const remaining = remainingToday(product);
-  const exhausted = stock > 0 && remaining <= 0;
+  const exhausted = hasDailyStockLimit(product) && remaining <= 0;
   const image = product.image || "https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&w=900&q=80";
   return `
     <article class="product-card ${exhausted ? "sold-out" : ""}">
@@ -753,11 +762,11 @@ function dailyMenuCard(product) {
       <div class="product-body">
         <div class="badge-row">
           <span class="badge">${product.active ? "Ativo" : "Inativo"}</span>
-          <span class="badge ${exhausted ? "danger" : ""}">${exhausted ? "Esgotado" : stock ? `Restam ${remaining}` : "Sem limite"}</span>
+          <span class="badge ${exhausted ? "danger" : ""}">${exhausted ? "Esgotado" : stock !== null ? `Restam ${remaining}` : "Sem limite"}</span>
         </div>
         <div class="product-heading"><h3>${product.name}</h3><strong class="price">${money(product.price)}</strong></div>
         <p class="muted">${product.description}</p>
-        <p class="hint">Quantidade do dia: ${stock || "sem limite"} | Vendido hoje: ${sold}</p>
+        <p class="hint">Quantidade do dia: ${stock ?? "sem limite"} | Vendido hoje: ${sold}</p>
         <div class="actions">
           <button type="button" class="btn ghost" data-edit-product="${product.id}">Editar</button>
           <button type="button" class="btn ghost" data-toggle-product="${product.id}">${product.active ? "Desativar" : "Ativar"}</button>
@@ -791,8 +800,8 @@ function productsAdmin() {
           </div>
           <div class="field">
             <label>Quantidade do dia</label>
-            <input name="dailyStock" type="number" min="0" step="1" value="${product.dailyStock || ""}" placeholder="Ex.: 40">
-            <p class="hint">Use 0 ou deixe vazio para não limitar.</p>
+            <input name="dailyStock" type="number" min="0" step="1" value="${product.dailyStock ?? ""}" placeholder="Ex.: 40">
+            <p class="hint">Deixe vazio para não limitar. Use 0 para esgotar.</p>
           </div>
         </div>
         ${productImageFields(product)}
@@ -822,7 +831,7 @@ function productsAdmin() {
               <div class="badge-row">
                 <span class="badge">${product.active ? "Ativo" : "Inativo"}${product.dishOfDay ? " - Prato do dia" : ""}</span>
                 ${product.dayOfWeek ? `<span class="badge">${dayLabels[product.dayOfWeek] || product.dayOfWeek}</span>` : ""}
-                ${Number(product.dailyStock || 0) > 0 ? `<span class="badge">Restam ${remainingToday(product)} de ${product.dailyStock} - vendido hoje ${soldToday(product.id)}</span>` : ""}
+                ${hasDailyStockLimit(product) ? `<span class="badge ${isSoldOut(product) ? "danger" : ""}">${isSoldOut(product) ? "Esgotado" : `Restam ${remainingToday(product)} de ${product.dailyStock}`} - vendido hoje ${soldToday(product.id)}</span>` : '<span class="badge">Sem limite</span>'}
               </div>
               <div class="product-heading"><h3>${product.name}</h3><strong class="price">${money(product.price)}</strong></div>
               <p class="muted">${categoryLabel(product.category)}</p>
@@ -989,7 +998,7 @@ async function saveProductForm(form, button = null) {
       active: Boolean(data.active),
       dishOfDay: Boolean(data.dishOfDay) || data.category === "Cardapio do dia",
       dayOfWeek: data.dayOfWeek,
-      dailyStock: Number(data.dailyStock || 0)
+      dailyStock: parseDailyStock(data.dailyStock)
     };
 
     if (data.id) await api(`/api/products/${data.id}`, { method: "PUT", body: JSON.stringify(payload) });
@@ -1039,7 +1048,7 @@ async function saveDailyMenuForm(form, button = null) {
         active: true,
         dishOfDay: true,
         dayOfWeek: data.dayOfWeek,
-        dailyStock: Number(data.dailyStock || 0)
+        dailyStock: parseDailyStock(data.dailyStock)
       })
     });
 

@@ -147,8 +147,43 @@ async function main() {
     await waitForServer();
     const before = await request("/api/state");
     const product = before.products.find(item => item.name === "Coca-Cola 600 ml");
+    const marmita = before.products.find(item => item.category === "Marmitas");
     assert(product, "Coca-Cola 600 ml was not found.");
+    assert(marmita, "Marmita test product was not found.");
     assert(Number(product.dailyStock) === 30, "Expected Coca-Cola daily stock to be 30.");
+
+    await request(`/api/products/${marmita.id}`, {
+      method: "PUT",
+      body: {
+        name: marmita.name,
+        category: marmita.category,
+        description: marmita.description,
+        price: marmita.price,
+        image: marmita.image,
+        active: true,
+        dishOfDay: marmita.dishOfDay,
+        dayOfWeek: marmita.dayOfWeek,
+        dailyStock: 0
+      }
+    });
+
+    const afterZero = await request("/api/state");
+    const marmitaAfterZero = afterZero.products.find(item => item.id === marmita.id);
+    assert(Number(marmitaAfterZero.dailyStock) === 0, `Expected marmita stock 0, got ${marmitaAfterZero.dailyStock}.`);
+    assert(Number(marmitaAfterZero.remainingToday) === 0, `Expected marmita remaining 0, got ${marmitaAfterZero.remainingToday}.`);
+    assert(marmitaAfterZero.soldOut === true, "Expected marmita with stock 0 to be sold out.");
+
+    let zeroStockBlocked = false;
+    try {
+      await request("/api/orders", {
+        method: "POST",
+        body: orderPayload(marmitaAfterZero, 1)
+      });
+    } catch (error) {
+      zeroStockBlocked = true;
+      assert(error.message.includes("esgotado"), `Unexpected zero-stock message: ${error.message}`);
+    }
+    assert(zeroStockBlocked, "Expected zero-stock marmita order to be blocked.");
 
     await request("/api/orders", {
       method: "POST",
@@ -186,6 +221,7 @@ async function main() {
     assert(productAfter30.soldOut === true, "Expected product to be marked as sold out.");
 
     console.log("stock test ok");
+    console.log(`${marmita.name}: limit 0, remaining ${marmitaAfterZero.remainingToday}, soldOut ${marmitaAfterZero.soldOut}`);
     console.log(`Coca-Cola 600 ml: limit ${product.dailyStock}, sold ${soldAfter30}, remaining ${productAfter30.remainingToday}`);
   } finally {
     await stopServer(child);

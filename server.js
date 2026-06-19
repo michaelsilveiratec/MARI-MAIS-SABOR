@@ -443,7 +443,22 @@ function canWriteLocalUploads() {
   return !process.env.VERCEL;
 }
 
+function hasDailyStockLimit(value) {
+  return value !== undefined && value !== null && String(value).trim() !== "";
+}
+
+function normalizeDailyStock(value) {
+  if (!hasDailyStockLimit(value)) return null;
+  const stock = Number(value);
+  if (!Number.isFinite(stock) || stock < 0) return 0;
+  return Math.floor(stock);
+}
+
 function normalizeProduct(input, current = {}) {
+  const dailyStockSource = Object.prototype.hasOwnProperty.call(input, "dailyStock")
+    ? input.dailyStock
+    : current.dailyStock;
+
   return {
     ...current,
     name: String(input.name || current.name || "").trim(),
@@ -454,7 +469,7 @@ function normalizeProduct(input, current = {}) {
     active: Boolean(input.active ?? current.active ?? true),
     dishOfDay: Boolean(input.dishOfDay ?? current.dishOfDay ?? false),
     dayOfWeek: String(input.dayOfWeek ?? current.dayOfWeek ?? "").trim(),
-    dailyStock: Number(input.dailyStock ?? current.dailyStock ?? 0)
+    dailyStock: normalizeDailyStock(dailyStockSource)
   };
 }
 
@@ -526,14 +541,15 @@ function soldToday(db, productId) {
 }
 
 function productWithAvailability(db, product) {
-  const dailyStock = Number(product.dailyStock || 0);
+  const hasLimit = hasDailyStockLimit(product.dailyStock);
+  const dailyStock = hasLimit ? Number(product.dailyStock) : null;
   const sold = soldToday(db, product.id);
-  const remaining = dailyStock > 0 ? Math.max(0, dailyStock - sold) : null;
+  const remaining = hasLimit ? Math.max(0, dailyStock - sold) : null;
   return {
     ...product,
     soldToday: sold,
     remainingToday: remaining,
-    soldOut: dailyStock > 0 && remaining <= 0
+    soldOut: hasLimit && remaining <= 0
   };
 }
 
@@ -561,8 +577,8 @@ function validateOrderStock(db, order) {
       throw new Error(`${product.name} não está disponível no cardápio de hoje.`);
     }
 
-    if (Number(product.dailyStock || 0) > 0) {
-      const remaining = Number(product.dailyStock) - soldToday(db, productId);
+    if (hasDailyStockLimit(product.dailyStock)) {
+      const remaining = Math.max(0, Number(product.dailyStock) - soldToday(db, productId));
       if (quantity > remaining) {
         throw new Error(`${product.name} esgotado devido ao número de pedidos do dia.`);
       }
