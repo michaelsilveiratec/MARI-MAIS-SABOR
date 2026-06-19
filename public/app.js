@@ -4,6 +4,7 @@ const AUTO_PRINT_KEY = "mari_mais_sabor_auto_print";
 const AUTO_PRINT_DEFAULT_KEY = "mari_mais_sabor_auto_print_default_v2";
 const KITCHEN_VOICE_KEY = "mari_mais_sabor_kitchen_voice";
 const KITCHEN_VOICE_DEFAULT_KEY = "mari_mais_sabor_kitchen_voice_default_v1";
+const AUTO_REFRESH_MS = 6000;
 
 const statusLabels = {
   novo: "Novo",
@@ -82,6 +83,8 @@ let state = {
     clockTimer: null
   }
 };
+
+let autoRefreshRunning = false;
 
 function loadCart() {
   try {
@@ -288,6 +291,52 @@ function route() {
 
 function matchesRoute(path, routes) {
   return routes.some(routePath => path === routePath || path.startsWith(`${routePath}/`));
+}
+
+function currentView() {
+  const path = window.location.pathname;
+  if (matchesRoute(path, ["/admin", "/adm"])) return "admin";
+  if (matchesRoute(path, ["/cozinha", "/monitor"])) return "cozinha";
+  if (path.startsWith("/pedido/")) return "pedido";
+  return "cardapio";
+}
+
+function isEditingForm() {
+  const active = document.activeElement;
+  if (!active || active === document.body) return false;
+  return Boolean(active.closest("input, textarea, select, form"));
+}
+
+function shouldPauseAutoRender(view) {
+  if (view === "cozinha") return false;
+  if (isEditingForm()) return true;
+  if (view === "cardapio" && document.querySelector("#checkout")) return true;
+  if (view === "admin" && document.querySelector("#product-form, #brand-form, #daily-menu-form")) return true;
+  return false;
+}
+
+function renderCurrentView(view = currentView()) {
+  if (view === "admin") return renderAdmin();
+  if (view === "cozinha") return renderKitchen();
+  if (view === "cardapio") return renderMenu();
+  return route();
+}
+
+async function autoRefreshCurrentView() {
+  const view = currentView();
+  if (view === "pedido" || autoRefreshRunning) return;
+
+  autoRefreshRunning = true;
+  try {
+    await refresh();
+    if (!shouldPauseAutoRender(view)) {
+      renderCurrentView(view);
+    }
+  } catch (error) {
+    console.warn("Não foi possível atualizar a tela automaticamente.", error);
+  } finally {
+    autoRefreshRunning = false;
+  }
 }
 
 function shell(content, active = "cardapio") {
@@ -1862,11 +1911,7 @@ document.addEventListener("change", event => {
 
 window.addEventListener("popstate", route);
 
-setInterval(async () => {
-  if (!location.pathname.startsWith("/cozinha")) return;
-  await refresh();
-  renderKitchen();
-}, 6000);
+setInterval(autoRefreshCurrentView, AUTO_REFRESH_MS);
 
 refresh().then(route).catch(error => {
   app.innerHTML = `<main class="page"><h1>Erro ao carregar</h1><p>${error.message}</p></main>`;
