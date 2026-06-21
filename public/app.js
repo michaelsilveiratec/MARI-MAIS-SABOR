@@ -377,7 +377,7 @@ function shell(content, active = "cardapio") {
   const isStaffArea = active === "admin" || active === "cozinha";
   const nav = isStaffArea
     ? active === "cozinha"
-      ? '<span class="readonly-badge">Somente visualização</span>'
+      ? ""
       : `
           <a class="${active === "cardapio" ? "active" : ""}" href="/cardapio">Cardápio</a>
           <a class="${active === "admin" ? "active" : ""}" href="/admin">Administração</a>
@@ -1324,7 +1324,6 @@ function renderKitchen() {
           <h1>Monitor da cozinha</h1>
           <p class="muted">Pedidos abertos para preparo. Atualização automática a cada 6 segundos.</p>
         </div>
-        <span class="readonly-badge">Somente visualização</span>
       </div>
       ${storageNotice()}
       <div class="kitchen-summary">

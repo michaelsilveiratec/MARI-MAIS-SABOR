@@ -36,6 +36,11 @@ async function run() {
   assert.equal(page.status, 200);
   assert.match(page.body, /Entregas \| Mari Mais Sabor/);
 
+  const brand = await request(baseUrl, "/api/motoboy/config");
+  assert.equal(brand.status, 200);
+  assert.equal(brand.body.name, "Mari Mais Sabor");
+  assert.ok(brand.body.logoUrl);
+
   const unconfigured = await request(baseUrl, "/api/motoboy/login", {
     method: "POST",
     body: JSON.stringify({ phone: "11999999999", password: "segredo" })

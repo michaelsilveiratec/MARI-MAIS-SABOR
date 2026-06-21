@@ -793,6 +793,13 @@ async function handleApi(req, res) {
       return send(res, 200, deliveryDriverPublicConfig(db));
     }
 
+    if (req.method === "GET" && url.pathname === "/api/motoboy/config") {
+      return send(res, 200, {
+        name: db.restaurant?.name || "Mari Mais Sabor",
+        logoUrl: db.restaurant?.logoUrl || ""
+      });
+    }
+
     if (req.method === "POST" && url.pathname === "/api/motoboy/login") {
       const body = await readBody(req);
       const config = deliveryDriverConfig(db);

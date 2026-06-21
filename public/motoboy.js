@@ -8,6 +8,7 @@ let sessionToken = localStorage.getItem(SESSION_KEY) || "";
 let confirmingDelivery = "";
 let installPrompt = null;
 let loading = false;
+let restaurant = { name: "Mari Mais Sabor", logoUrl: "" };
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -32,12 +33,27 @@ function api(path, options = {}) {
   });
 }
 
+function brandLogo() {
+  const source = restaurant.logoUrl || "/icons/delivery-moto.svg";
+  return `<img src="${escapeHtml(source)}" alt="${escapeHtml(restaurant.name)}" onerror="this.onerror=null;this.src='/icons/delivery-moto.svg'">`;
+}
+
+async function loadRestaurantBrand() {
+  try {
+    restaurant = await api("/api/motoboy/config");
+    const icon = document.querySelector("link[rel='icon']");
+    if (icon && restaurant.logoUrl) icon.href = restaurant.logoUrl;
+  } catch {
+    restaurant = { name: "Mari Mais Sabor", logoUrl: "" };
+  }
+}
+
 function driverHeader() {
   return `
     <header class="driver-header">
       <div class="driver-brand">
-        <img src="/icons/delivery-moto.svg" alt="">
-        <div><strong>Mari Mais Sabor</strong><span>Área do entregador</span></div>
+        ${brandLogo()}
+        <div><strong>${escapeHtml(restaurant.name)}</strong><span>Área do entregador</span></div>
       </div>
       <div class="header-actions">
         <button class="icon-button" type="button" data-install ${installPrompt ? "" : "hidden"}>Instalar</button>
@@ -57,7 +73,7 @@ function renderLogin(message = "") {
     <main class="login-wrap">
       <section class="login-card">
         <div class="login-hero">
-          <img src="/icons/delivery-moto.svg" alt="">
+          ${brandLogo()}
           <h1>Área do motoboy</h1>
           <p>Entre para ver somente as entregas em rota.</p>
         </div>
@@ -292,5 +308,10 @@ setInterval(() => {
   }
 }, 15000);
 
-if (sessionToken) loadDeliveries();
-else renderLogin();
+async function start() {
+  await loadRestaurantBrand();
+  if (sessionToken) loadDeliveries();
+  else renderLogin();
+}
+
+start();
