@@ -124,6 +124,7 @@ function orderCard(order, single = false) {
       </div>
       ${details}
       <div class="driver-actions">
+        <a class="driver-btn waze" href="https://www.waze.com/ul?q=${encodeURIComponent(address)}&amp;navigate=yes" target="_blank" rel="noopener">🚀 Iniciar no Waze</a>
         <a class="driver-btn" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(address)}" target="_blank" rel="noopener">🧭 Abrir Maps</a>
         <a class="driver-btn" href="tel:${phoneHref(order.customer?.phone)}">📞 Ligar</a>
         <button class="driver-btn primary" type="button" data-confirm="${escapeHtml(order.deliveryToken)}">✓ Confirmar entrega</button>

@@ -104,7 +104,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .detail strong { line-height: 1.35; overflow-wrap: anywhere; }
 
 .driver-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.driver-actions .primary { grid-column: 1 / -1; }
+.driver-actions .primary, .driver-actions .waze { grid-column: 1 / -1; }
 
 .driver-btn {
   display: inline-flex;
@@ -124,6 +124,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .driver-btn.primary { color: white; background: linear-gradient(135deg, var(--green), #2eaa70); }
+.driver-btn.waze { color: #173b45; background: linear-gradient(135deg, #6ee5f5, #42c8e2); }
 .driver-btn.coral { color: white; background: var(--coral); }
 .driver-btn.outline { border: 1px solid var(--line); background: transparent; }
 .driver-btn:disabled { cursor: wait; opacity: 0.65; }
@@ -170,6 +171,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .driver-brand span { display: none; }
   .driver-brand img { width: 44px; height: 44px; }
   .driver-actions { grid-template-columns: 1fr; }
-  .driver-actions .primary { grid-column: auto; }
+  .driver-actions .primary, .driver-actions .waze { grid-column: auto; }
   .code-row { grid-template-columns: 1fr; }
 }

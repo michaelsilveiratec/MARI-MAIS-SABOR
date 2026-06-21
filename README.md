@@ -121,7 +121,7 @@ MOTOBOY_PASSWORD=uma-senha-segura
 MOTOBOY_SESSION_SECRET=um-segredo-longo-e-aleatorio
 ```
 
-O aplicativo mostra somente pedidos de entrega com status `Saiu para entrega` (`A caminho`). Para cada pedido, permite abrir o Google Maps, ligar para o cliente e confirmar a entrega. A confirmação exige os 4 últimos dígitos do telefone do cliente e grava `status = entregue` e `deliveredAt`.
+O aplicativo mostra somente pedidos de entrega com status `Saiu para entrega` (`A caminho`). Para cada pedido, permite iniciar a navegação no Waze, abrir o Google Maps, ligar para o cliente e confirmar a entrega. A confirmação exige os 4 últimos dígitos do telefone do cliente e grava `status = entregue` e `deliveredAt`.
 
 Ao mudar um pedido para `Saiu para entrega`, o sistema cria um identificador exclusivo. O painel administrativo passa a mostrar os botões `Abrir entrega` e `Copiar link`, no formato `/motoboy/CODIGO`.
 

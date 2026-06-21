@@ -1,8 +1,8 @@
-const CACHE_NAME = "mari-motoboy-v1";
+const CACHE_NAME = "mari-motoboy-v2";
 const APP_SHELL = [
   "/motoboy",
-  "/motoboy.css?v=1",
-  "/motoboy.js?v=1",
+  "/motoboy.css?v=2",
+  "/motoboy.js?v=2",
   "/motoboy.webmanifest",
   "/icons/delivery-moto.svg"
 ];
