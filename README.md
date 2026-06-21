@@ -101,6 +101,30 @@ Na primeira inicialização, pedidos antigos não são impressos. A partir desse
 
 O link `/cozinha` foi pensado para ficar aberto em um monitor. Ele não tem botões de alteração, não confirma pagamento e não muda status; apenas mostra os pedidos abertos e atualiza automaticamente.
 
+## Aplicativo do motoboy (PWA)
+
+O entregador acessa:
+
+```text
+https://mari-mais-sabor.vercel.app/motoboy
+```
+
+No Android, abra o link no Chrome e escolha `Instalar aplicativo` ou `Adicionar à tela inicial`.
+
+Antes do primeiro acesso, abra `Administração > Marca > Acesso do motoboy` e cadastre o telefone com DDD e uma senha de no mínimo 6 caracteres. A senha é salva como hash e não é devolvida pela API.
+
+Também é possível configurar as credenciais diretamente na Vercel:
+
+```text
+MOTOBOY_PHONE=21999999999
+MOTOBOY_PASSWORD=uma-senha-segura
+MOTOBOY_SESSION_SECRET=um-segredo-longo-e-aleatorio
+```
+
+O aplicativo mostra somente pedidos de entrega com status `Saiu para entrega` (`A caminho`). Para cada pedido, permite abrir o Google Maps, ligar para o cliente e confirmar a entrega. A confirmação exige os 4 últimos dígitos do telefone do cliente e grava `status = entregue` e `deliveredAt`.
+
+Ao mudar um pedido para `Saiu para entrega`, o sistema cria um identificador exclusivo. O painel administrativo passa a mostrar os botões `Abrir entrega` e `Copiar link`, no formato `/motoboy/CODIGO`.
+
 ## Logo e dados da empresa
 
 No painel administrativo, abra a aba `Marca` para enviar ou trocar o logo.
@@ -143,6 +167,8 @@ Quando o pedido fica `A caminho`, aparece uma senha para receber/retirar o pedid
 - `server.js`: servidor, API, banco JSON e impressão direta.
 - `public/app.js`: telas do cardápio, admin, cozinha e acompanhamento.
 - `public/styles.css`: visual do sistema e impressão pelo navegador.
+- `public/motoboy.html`, `public/motoboy.js` e `public/motoboy.css`: aplicativo do entregador.
+- `public/motoboy.webmanifest` e `public/motoboy-sw.js`: instalação do PWA e cache da interface.
 - `data/db.json`: produtos, pedidos, dados da empresa e configuração da impressora.
 - `public/uploads`: fotos e logo enviados pelo painel.
 

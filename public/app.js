@@ -60,6 +60,7 @@ const categoryLabels = {
 
 let state = {
   restaurant: {},
+  deliveryDriver: {},
   products: [],
   orders: [],
   uploads: [],
@@ -271,6 +272,7 @@ function api(path, options = {}) {
 async function refresh() {
   const data = await api("/api/state");
   state.restaurant = data.restaurant;
+  state.deliveryDriver = data.deliveryDriver || {};
   state.products = data.products;
   state.orders = data.orders;
   state.uploads = data.uploads || [];
@@ -330,7 +332,7 @@ function shouldPauseAutoRender(view) {
   if (view === "cozinha") return false;
   if (isEditingForm()) return true;
   if (view === "cardapio" && document.querySelector("#checkout")) return true;
-  if (view === "admin" && document.querySelector("#product-form, #brand-form, #daily-menu-form")) return true;
+  if (view === "admin" && document.querySelector("#product-form, #brand-form, #driver-form, #daily-menu-form")) return true;
   return false;
 }
 
@@ -662,6 +664,8 @@ function ordersAdmin() {
 function orderCard(order) {
   const pixAwaiting = order.payment?.method === "Pix" && order.paymentStatus !== "pago";
   const actions = orderActions(order);
+  const deliveryPath = order.deliveryToken ? `/motoboy/${encodeURIComponent(order.deliveryToken)}` : "";
+  const deliveryUrl = deliveryPath ? `${window.location.origin}${deliveryPath}` : "";
   return `
     <article class="order-card status ${order.status}">
       <div class="row">
@@ -679,6 +683,15 @@ function orderCard(order) {
         <div class="payment-confirm">
           <span>Pix recebido?</span>
           <button type="button" class="btn secondary" data-confirm-payment="${order.id}">Confirmar pagamento Pix</button>
+        </div>
+      ` : ""}
+      ${order.status === "saiu_para_entrega" && deliveryPath && order.fulfillment?.type !== "Retirada" ? `
+        <div class="payment-confirm">
+          <span>Link exclusivo do motoboy</span>
+          <div class="actions">
+            <a class="btn secondary" href="${deliveryPath}" target="_blank" rel="noopener">Abrir entrega</a>
+            <button type="button" class="btn secondary" data-copy-driver-link="${deliveryUrl}">Copiar link</button>
+          </div>
         </div>
       ` : ""}
       <div class="actions">
@@ -905,6 +918,7 @@ async function uploadProductImage(file) {
 
 function brandAdmin() {
   const logo = restaurantLogoUrl();
+  const driver = state.deliveryDriver || {};
   const printerMode = state.restaurant.printerMode || "auto";
   const printerAgent = state.restaurant.printerAgent || {};
   const printerLastSeen = Date.parse(printerAgent.lastSeenAt || "");
@@ -982,6 +996,32 @@ function brandAdmin() {
         </form>
       </div>
     </section>
+    <section class="form-panel stack" style="margin-top:18px">
+      <div class="section-title" style="margin:0">
+        <div>
+          <h2>Acesso do motoboy</h2>
+          <p class="muted">O entregador entra em <strong>/motoboy</strong> e vê apenas pedidos que estão a caminho.</p>
+        </div>
+        <span class="badge ${driver.configured ? "" : "danger"}">${driver.configured ? "Configurado" : "Não configurado"}</span>
+      </div>
+      ${driver.managedByEnvironment ? '<div class="notice">Credenciais administradas pelas variáveis MOTOBOY_PHONE e MOTOBOY_PASSWORD na Vercel.</div>' : ""}
+      <form id="driver-form" class="stack">
+        <div class="two">
+          <div class="field">
+            <label>Telefone do motoboy</label>
+            <input name="phone" type="tel" inputmode="tel" value="${driver.phone || ""}" placeholder="(21) 99999-9999" ${driver.managedByEnvironment ? "disabled" : ""} required>
+          </div>
+          <div class="field">
+            <label>${driver.configured ? "Nova senha (opcional)" : "Senha"}</label>
+            <input name="password" type="password" minlength="6" autocomplete="new-password" placeholder="Mínimo de 6 caracteres" ${driver.managedByEnvironment ? "disabled" : ""} ${driver.configured ? "" : "required"}>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn secondary" data-save-driver ${driver.managedByEnvironment ? "disabled" : ""}>Salvar acesso do motoboy</button>
+          <a class="btn ghost" href="/motoboy" target="_blank" rel="noopener">Abrir tela do motoboy</a>
+        </div>
+      </form>
+    </section>
   `;
 }
 
@@ -1021,6 +1061,35 @@ async function saveBrandForm(form, button = null) {
   } catch (error) {
     state.flashType = "error";
     state.flash = `Erro ao salvar marca, Pix e impressora: ${error.message}`;
+    renderAdmin();
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
+}
+
+async function saveDriverForm(form, button = null) {
+  const originalText = button ? button.textContent : "";
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Salvando...";
+  }
+  try {
+    const data = Object.fromEntries(new FormData(form).entries());
+    await api("/api/delivery-driver", {
+      method: "PATCH",
+      body: JSON.stringify({ phone: data.phone, password: data.password })
+    });
+    state.flashType = "success";
+    state.flash = "Acesso do motoboy atualizado com sucesso.";
+    await refresh();
+    state.adminTab = "marca";
+    renderAdmin();
+  } catch (error) {
+    state.flashType = "error";
+    state.flash = `Erro ao salvar acesso do motoboy: ${error.message}`;
     renderAdmin();
   } finally {
     if (button) {
@@ -1898,6 +1967,15 @@ document.addEventListener("click", async event => {
       }
     }
   }
+  if (target.dataset.copyDriverLink) {
+    try {
+      await navigator.clipboard.writeText(target.dataset.copyDriverLink);
+      target.textContent = "Link copiado";
+      setTimeout(() => { target.textContent = "Copiar link"; }, 1200);
+    } catch {
+      window.prompt("Copie o link do motoboy:", target.dataset.copyDriverLink);
+    }
+  }
   if (target.dataset.editProduct) {
     state.editingProduct = state.products.find(product => product.id === target.dataset.editProduct);
     state.adminTab = "cardapio";
@@ -1964,6 +2042,10 @@ document.addEventListener("submit", async event => {
   if (event.target.id === "brand-form") {
     const button = event.target.querySelector("[data-save-brand]");
     await saveBrandForm(event.target, button);
+  }
+  if (event.target.id === "driver-form") {
+    const button = event.target.querySelector("[data-save-driver]");
+    await saveDriverForm(event.target, button);
   }
   if (event.target.id === "daily-menu-form") {
     const button = event.target.querySelector("[data-save-daily-menu]");

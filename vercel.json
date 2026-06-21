@@ -26,6 +26,14 @@
       "dest": "/public/styles.css"
     },
     {
+      "src": "/motoboy\\.(js|css|webmanifest)",
+      "dest": "/public/motoboy.$1"
+    },
+    {
+      "src": "/motoboy-sw.js",
+      "dest": "/public/motoboy-sw.js"
+    },
+    {
       "src": "/icons/(.*)",
       "dest": "/public/icons/$1"
     },

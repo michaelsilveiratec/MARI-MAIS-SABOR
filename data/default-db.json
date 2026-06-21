@@ -88,5 +88,9 @@
       "id": "p1781799691633"
     }
   ],
-  "orders": []
+  "orders": [],
+  "deliveryDriver": {
+    "phone": "",
+    "passwordHash": ""
+  }
 }

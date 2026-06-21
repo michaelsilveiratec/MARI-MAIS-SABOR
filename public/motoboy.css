@@ -1,0 +1,175 @@
+:root {
+  color-scheme: light;
+  --coral: #f65662;
+  --coral-dark: #d93c49;
+  --ink: #302d35;
+  --muted: #746f78;
+  --paper: #fffdfb;
+  --cream: #fff8f3;
+  --line: #eadfd8;
+  --green: #218c5b;
+  --shadow: 0 14px 34px rgba(90, 55, 48, 0.12);
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; background: var(--cream); }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 100% 0, rgba(255, 220, 107, 0.3), transparent 32rem),
+    var(--cream);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button, input { font: inherit; }
+
+button, a { -webkit-tap-highlight-color: transparent; }
+
+.driver-loading {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.driver-loading img { width: 108px; }
+
+.driver-shell { min-height: 100vh; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+.driver-header {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 76px;
+  padding: calc(10px + env(safe-area-inset-top)) 18px 10px;
+  color: white;
+  background: linear-gradient(135deg, var(--coral), #ef794f);
+  box-shadow: 0 6px 24px rgba(214, 59, 72, 0.2);
+}
+
+.driver-brand { display: flex; align-items: center; gap: 11px; }
+.driver-brand img { width: 52px; height: 52px; padding: 3px; border-radius: 16px; background: #fff6; }
+.driver-brand strong, .driver-brand span { display: block; }
+.driver-brand strong { font-size: 1.05rem; }
+.driver-brand span { margin-top: 2px; font-size: 0.78rem; opacity: 0.9; }
+.header-actions { display: flex; gap: 7px; }
+
+.icon-button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid #ffffff66;
+  border-radius: 14px;
+  color: white;
+  background: #ffffff20;
+  cursor: pointer;
+}
+
+.driver-page { width: min(100% - 28px, 620px); margin: 0 auto; padding-top: 24px; }
+.driver-page h1 { margin: 0; font-size: clamp(1.65rem, 7vw, 2.2rem); line-height: 1.08; }
+.driver-page > .lead { margin: 8px 0 22px; color: var(--muted); }
+
+.driver-card, .login-card, .empty-card, .success-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.delivery-list { display: grid; gap: 16px; }
+.driver-card { position: relative; overflow: hidden; }
+.driver-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--coral); }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.card-top h2 { margin: 3px 0 0; font-size: 1.35rem; }
+.eyebrow { margin: 0; color: var(--coral-dark); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.status-pill { padding: 7px 10px; border-radius: 999px; color: #7c4f00; background: #fff0b7; font-size: 0.78rem; font-weight: 800; white-space: nowrap; }
+.status-pill.delivered { color: #12643e; background: #dff5e9; }
+
+.delivery-details { display: grid; gap: 13px; margin: 20px 0; }
+.detail { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+.detail-icon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: #fff0ec; }
+.detail small, .detail strong { display: block; }
+.detail small { margin-bottom: 2px; color: var(--muted); }
+.detail strong { line-height: 1.35; overflow-wrap: anywhere; }
+
+.driver-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.driver-actions .primary { grid-column: 1 / -1; }
+
+.driver-btn {
+  display: inline-flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 15px;
+  border: 0;
+  border-radius: 14px;
+  color: var(--ink);
+  background: #f3ece8;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.driver-btn.primary { color: white; background: linear-gradient(135deg, var(--green), #2eaa70); }
+.driver-btn.coral { color: white; background: var(--coral); }
+.driver-btn.outline { border: 1px solid var(--line); background: transparent; }
+.driver-btn:disabled { cursor: wait; opacity: 0.65; }
+
+.confirm-panel { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.confirm-panel p { margin: 0 0 12px; color: var(--muted); }
+.code-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+
+.field { display: grid; gap: 7px; }
+.field + .field { margin-top: 15px; }
+.field label { font-size: 0.86rem; font-weight: 800; }
+.field input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid #d9cbc4;
+  border-radius: 14px;
+  outline: none;
+  color: var(--ink);
+  background: white;
+}
+.field input:focus { border-color: var(--coral); box-shadow: 0 0 0 4px #f656621b; }
+.code-input { font-size: 1.35rem; font-weight: 900; letter-spacing: 0.2em; text-align: center; }
+
+.notice { margin: 0 0 16px; padding: 12px 14px; border-radius: 12px; color: #922d36; background: #ffe2e4; font-size: 0.9rem; }
+
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 28px 18px; }
+.login-card { width: min(100%, 430px); padding: 28px; }
+.login-hero { margin-bottom: 24px; text-align: center; }
+.login-hero img { width: 104px; }
+.login-hero h1 { margin: 10px 0 6px; font-size: 1.85rem; }
+.login-hero p { margin: 0; color: var(--muted); }
+.login-card .driver-btn { width: 100%; margin-top: 18px; }
+.install-button { margin-top: 10px !important; }
+
+.empty-card, .success-card { text-align: center; }
+.empty-card img, .success-card img { width: 112px; }
+.empty-card h2, .success-card h2 { margin: 8px 0; }
+.empty-card p, .success-card p { margin: 0 0 18px; color: var(--muted); }
+
+.footer-note { margin: 22px 0 0; color: var(--muted); font-size: 0.78rem; text-align: center; }
+
+@media (max-width: 380px) {
+  .driver-brand span { display: none; }
+  .driver-brand img { width: 44px; height: 44px; }
+  .driver-actions { grid-template-columns: 1fr; }
+  .driver-actions .primary { grid-column: auto; }
+  .code-row { grid-template-columns: 1fr; }
+}

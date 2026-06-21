@@ -1,0 +1,20 @@
+{
+  "name": "Entregas Mari Mais Sabor",
+  "short_name": "Entregas Mari",
+  "description": "Aplicativo de entregas da Mari Mais Sabor",
+  "lang": "pt-BR",
+  "start_url": "/motoboy",
+  "scope": "/motoboy",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8f3",
+  "theme_color": "#f65662",
+  "icons": [
+    {
+      "src": "/icons/delivery-moto.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

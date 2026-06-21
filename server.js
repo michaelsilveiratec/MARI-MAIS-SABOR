@@ -1,4 +1,5 @@
 const http = require("http");
+const crypto = require("crypto");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
@@ -20,6 +21,7 @@ const DATABASE_URL = process.env.DATABASE_URL
   || process.env.POSTGRES_PRISMA_URL
   || process.env.POSTGRES_URL_NON_POOLING
   || "";
+const DRIVER_SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 let pool = null;
 let databaseReady = false;
@@ -29,6 +31,7 @@ const MIME = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
@@ -89,6 +92,105 @@ function canPersistWrites() {
 
 function isWriteMethod(method) {
   return !["GET", "HEAD", "OPTIONS"].includes(method);
+}
+
+function normalizePhone(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function safeEqual(left, right) {
+  const leftBuffer = Buffer.from(String(left || ""));
+  const rightBuffer = Buffer.from(String(right || ""));
+  return leftBuffer.length === rightBuffer.length && crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(String(password), salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, passwordHash) {
+  const [salt, storedHash] = String(passwordHash || "").split(":");
+  if (!salt || !storedHash) return false;
+  const receivedHash = crypto.scryptSync(String(password || ""), salt, 64).toString("hex");
+  return safeEqual(receivedHash, storedHash);
+}
+
+function deliveryDriverConfig(db) {
+  const envPhone = normalizePhone(process.env.MOTOBOY_PHONE);
+  const envPassword = String(process.env.MOTOBOY_PASSWORD || "");
+  const stored = db.deliveryDriver || {};
+  return {
+    phone: envPhone || normalizePhone(stored.phone),
+    password: envPassword,
+    passwordHash: envPassword ? "" : String(stored.passwordHash || ""),
+    managedByEnvironment: Boolean(envPhone || envPassword)
+  };
+}
+
+function deliveryDriverPublicConfig(db) {
+  const config = deliveryDriverConfig(db);
+  return {
+    phone: config.phone,
+    configured: Boolean(config.phone && (config.password || config.passwordHash)),
+    managedByEnvironment: config.managedByEnvironment
+  };
+}
+
+function driverSessionSecret(db) {
+  const config = deliveryDriverConfig(db);
+  const source = process.env.MOTOBOY_SESSION_SECRET
+    || `${DATABASE_URL}|${config.phone}|${config.password || config.passwordHash}|mari-mais-sabor`;
+  return crypto.createHash("sha256").update(source).digest();
+}
+
+function createDriverToken(db) {
+  const payload = Buffer.from(JSON.stringify({
+    role: "motoboy",
+    exp: Date.now() + DRIVER_SESSION_TTL_MS
+  })).toString("base64url");
+  const signature = crypto.createHmac("sha256", driverSessionSecret(db)).update(payload).digest("base64url");
+  return `${payload}.${signature}`;
+}
+
+function isDriverAuthorized(req, db) {
+  const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+  const [payload, signature] = token.split(".");
+  if (!payload || !signature) return false;
+  const expected = crypto.createHmac("sha256", driverSessionSecret(db)).update(payload).digest("base64url");
+  if (!safeEqual(signature, expected)) return false;
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    return data.role === "motoboy" && Number(data.exp) > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function deliveryOrderToken(order) {
+  return String(order.deliveryToken || order.id || "");
+}
+
+function publicDeliveryOrder(order) {
+  return {
+    id: order.id,
+    deliveryToken: deliveryOrderToken(order),
+    createdAt: order.createdAt,
+    deliveredAt: order.deliveredAt || null,
+    status: order.status,
+    customer: {
+      name: order.customer?.name || "",
+      phone: order.customer?.phone || ""
+    },
+    fulfillment: {
+      type: order.fulfillment?.type || "Entrega",
+      address: order.fulfillment?.address || "",
+      number: order.fulfillment?.number || "",
+      neighborhood: order.fulfillment?.neighborhood || "",
+      complement: order.fulfillment?.complement || ""
+    }
+  };
 }
 
 function getPool() {
@@ -620,7 +722,9 @@ function serveStatic(req, res) {
   const safePath = path.normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");
   let filePath = path.join(PUBLIC_DIR, safePath);
 
-  if (url.pathname === "/" || !path.extname(filePath)) {
+  if (matchesDeliveryPath(url.pathname)) {
+    filePath = path.join(PUBLIC_DIR, "motoboy.html");
+  } else if (url.pathname === "/" || !path.extname(filePath)) {
     filePath = path.join(PUBLIC_DIR, "index.html");
   }
 
@@ -647,7 +751,7 @@ async function handleApi(req, res) {
   const db = await readDb();
 
   try {
-    if (isWriteMethod(req.method) && !canPersistWrites()) {
+    if (isWriteMethod(req.method) && url.pathname !== "/api/motoboy/login" && !canPersistWrites()) {
       return send(res, 503, {
         error: "Banco online não configurado. Configure DATABASE_URL na Vercel antes de receber pedidos ou alterar estoque."
       });
@@ -656,10 +760,105 @@ async function handleApi(req, res) {
     if (req.method === "GET" && url.pathname === "/api/state") {
       return send(res, 200, {
         ...db,
+        deliveryDriver: deliveryDriverPublicConfig(db),
+        orders: (db.orders || []).map(order => ({ ...order, deliveryToken: deliveryOrderToken(order) })),
         products: productsWithAvailability(db),
         uploads: listUploads(),
         storage: storageInfo()
       });
+    }
+
+    if (req.method === "PATCH" && url.pathname === "/api/delivery-driver") {
+      if (deliveryDriverConfig(db).managedByEnvironment) {
+        return send(res, 409, { error: "O acesso do motoboy está configurado pelas variáveis da Vercel." });
+      }
+      const body = await readBody(req);
+      const phone = normalizePhone(body.phone);
+      const password = String(body.password || "");
+      if (phone.length < 10 || phone.length > 11) {
+        return send(res, 400, { error: "Informe um telefone do motoboy com DDD." });
+      }
+      if (!password && !db.deliveryDriver?.passwordHash) {
+        return send(res, 400, { error: "Cadastre uma senha para o motoboy." });
+      }
+      if (password && password.length < 6) {
+        return send(res, 400, { error: "A senha precisa ter pelo menos 6 caracteres." });
+      }
+      db.deliveryDriver = {
+        phone,
+        passwordHash: password ? hashPassword(password) : db.deliveryDriver.passwordHash,
+        updatedAt: new Date().toISOString()
+      };
+      await writeDb(db);
+      return send(res, 200, deliveryDriverPublicConfig(db));
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/motoboy/login") {
+      const body = await readBody(req);
+      const config = deliveryDriverConfig(db);
+      if (!config.phone || (!config.password && !config.passwordHash)) {
+        return send(res, 503, { error: "O acesso do motoboy ainda não foi configurado pelo restaurante." });
+      }
+      const phoneMatches = safeEqual(normalizePhone(body.phone), config.phone);
+      const receivedPassword = crypto.createHash("sha256").update(String(body.password || "")).digest("hex");
+      const configuredPassword = crypto.createHash("sha256").update(config.password).digest("hex");
+      const passwordMatches = config.password
+        ? safeEqual(receivedPassword, configuredPassword)
+        : verifyPassword(body.password, config.passwordHash);
+      if (!phoneMatches || !passwordMatches) {
+        return send(res, 401, { error: "Telefone ou senha incorretos." });
+      }
+      return send(res, 200, {
+        token: createDriverToken(db),
+        expiresAt: new Date(Date.now() + DRIVER_SESSION_TTL_MS).toISOString()
+      });
+    }
+
+    if (parts[1] === "motoboy" && parts[2] === "orders") {
+      if (!isDriverAuthorized(req, db)) {
+        return send(res, 401, { error: "Sua sessão expirou. Entre novamente." });
+      }
+
+      if (req.method === "GET" && !parts[3]) {
+        const orders = db.orders
+          .filter(order => order.status === "saiu_para_entrega" && order.fulfillment?.type !== "Retirada")
+          .map(publicDeliveryOrder);
+        return send(res, 200, orders);
+      }
+
+      const index = db.orders.findIndex(order => deliveryOrderToken(order) === parts[3]);
+      if (index === -1 || db.orders[index].fulfillment?.type === "Retirada") {
+        return send(res, 404, { error: "Entrega não encontrada." });
+      }
+
+      if (req.method === "GET" && !parts[4]) {
+        if (!["saiu_para_entrega", "entregue"].includes(db.orders[index].status)) {
+          return send(res, 404, { error: "Esta entrega não está disponível." });
+        }
+        return send(res, 200, publicDeliveryOrder(db.orders[index]));
+      }
+
+      if (req.method === "POST" && parts[4] === "confirm-delivery") {
+        const order = db.orders[index];
+        if (order.status !== "saiu_para_entrega") {
+          return send(res, 409, { error: order.status === "entregue" ? "Este pedido já foi entregue." : "Este pedido não está a caminho." });
+        }
+        const body = await readBody(req);
+        const receivedCode = String(body.code || "").replace(/\D/g, "");
+        const expectedCode = normalizePhone(order.customer?.phone).slice(-4);
+        if (receivedCode.length !== 4 || !expectedCode || !safeEqual(receivedCode, expectedCode)) {
+          return send(res, 400, { error: "Código incorreto. Confira os 4 últimos dígitos com o cliente." });
+        }
+        const deliveredAt = new Date().toISOString();
+        order.status = "entregue";
+        order.deliveredAt = deliveredAt;
+        order.history = [
+          ...compactHistory(order.history || []),
+          { status: "entregue", at: deliveredAt }
+        ];
+        await writeDb(db);
+        return send(res, 200, publicDeliveryOrder(order));
+      }
     }
 
     if (req.method === "GET" && url.pathname === "/api/uploads") {
@@ -795,6 +994,12 @@ async function handleApi(req, res) {
           delete db.orders[index].confirmPayment;
         }
         if (body.status && body.status !== previousStatus) {
+          if (body.status === "saiu_para_entrega" && !db.orders[index].deliveryToken) {
+            db.orders[index].deliveryToken = crypto.randomBytes(6).toString("hex").toUpperCase();
+          }
+          if (body.status === "entregue" && !db.orders[index].deliveredAt) {
+            db.orders[index].deliveredAt = new Date().toISOString();
+          }
           db.orders[index].history = [
             ...(db.orders[index].history || []),
             { status: body.status, at: new Date().toISOString() }
@@ -826,6 +1031,10 @@ if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`Mari Mais Sabor rodando em http://localhost:${PORT}`);
   });
+}
+
+function matchesDeliveryPath(pathname) {
+  return pathname === "/motoboy" || pathname.startsWith("/motoboy/");
 }
 
 module.exports = handleRequest;
